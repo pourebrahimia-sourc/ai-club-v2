@@ -787,11 +787,39 @@ function goSubscribe() {
 
   window.location.href = 'subscribe.html';
 }
+async function saveProfileToDatabase() {
+  const token = getAccessToken();
+  if (!token) return;
 
+  const profile = getProfile();
+
+  if (
+    !profile.age &&
+    !profile.ethnicity &&
+    !profile.body &&
+    !profile.bodyDetails &&
+    !profile.hair &&
+    !profile.appearanceDetails &&
+    !profile.personality
+  ) {
+    return;
+  }
+
+  try {
+    await fetch('/api/save-profile', {
+      method: 'POST',
+      headers: authHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({ profile })
+    });
+  } catch (e) {}
+}
 async function initResultPage() {
   await syncSessionFromUrl();
   await syncStoredSession();
   applyProfileToSummary();
+  await saveProfileToDatabase();
   await refreshBalance();
   applyImageState();
 }
