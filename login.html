@@ -364,12 +364,21 @@
         const res = await fetch('/api/auth', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            type:'signup',
-            email,
-            password,
-            name
-          })
+body: JSON.stringify({
+  type:'signup',
+  email,
+  password,
+  name,
+  profile: {
+    age: localStorage.getItem('age'),
+    ethnicity: localStorage.getItem('ethnicity'),
+    body: localStorage.getItem('body'),
+    bodyDetails: localStorage.getItem('bodyDetails'),
+    hair: localStorage.getItem('hair'),
+    appearanceDetails: localStorage.getItem('appearanceDetails'),
+    personality: localStorage.getItem('personality')
+  }
+})
         });
 
         const data = await res.json();
@@ -408,11 +417,20 @@
         const res = await fetch('/api/auth', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            type:'login',
-            email,
-            password
-          })
+body: JSON.stringify({
+  type:'login',
+  email,
+  password,
+  profile: {
+    age: localStorage.getItem('age'),
+    ethnicity: localStorage.getItem('ethnicity'),
+    body: localStorage.getItem('body'),
+    bodyDetails: localStorage.getItem('bodyDetails'),
+    hair: localStorage.getItem('hair'),
+    appearanceDetails: localStorage.getItem('appearanceDetails'),
+    personality: localStorage.getItem('personality')
+  }
+})
         });
 
         const data = await res.json();
