@@ -388,7 +388,13 @@
           setMode('login');
           return;
         }
+const newUserId = data.user.id;
 
+if (localStorage.getItem('lastUserId') !== newUserId) {
+  clearGeneratedState();
+}
+
+localStorage.setItem('lastUserId', newUserId);
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
         window.location.href = getPostAuthRedirect();
@@ -430,7 +436,13 @@
           setStatus('Login session failed');
           return;
         }
+const newUserId = data.user.id;
 
+if (localStorage.getItem('lastUserId') !== newUserId) {
+  clearGeneratedState();
+}
+
+localStorage.setItem('lastUserId', newUserId);
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
         window.location.href = getPostAuthRedirect();
