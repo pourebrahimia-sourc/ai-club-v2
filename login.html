@@ -473,7 +473,7 @@
       setStatus(data.error);
       return;
     }
-
+alert(data.url);
     window.location.href = data.url;
   } catch(e){
     setStatus('Google login failed');
