@@ -448,25 +448,17 @@ async function syncSessionFromUrl() {
 
     if (user) {
       saveUserSession(user, accessToken, refreshToken);
+      await saveProfileToDatabase();
+
+      const search = new URLSearchParams(window.location.search);
+      const returnTo = search.get('returnTo') || 'index.html';
+
       history.replaceState({}, document.title, window.location.pathname);
 
-    }
-  } catch (e) {}
-}
-
-async function syncStoredSession(){
-  const token = getAccessToken();
-  if (!token) return;
-
-  try {
-    const res = await fetch('/api/session', {
-      headers: authHeaders()
-    });
-    const json = await res.json();
-    const session = json?.data?.session;
-
-    if (session?.user) {
-      saveUserSession(session.user, token, localStorage.getItem('refreshToken') || '');
+      if (returnTo !== 'result.html') {
+        window.location.href = returnTo;
+        return;
+      }
     }
   } catch (e) {}
 }
