@@ -236,19 +236,28 @@ Interaction style:
     if (updatedChatBalance === null) {
       return res.status(200).json({ reply: "No tokens left 🔒" });
     }
-
-    await supabase.from('chat_history').insert([
-      {
-        user_id: USER_ID,
-        message: msg,
-        role: "user"
-      },
-      {
-        user_id: USER_ID,
-        message: reply,
-        role: "ai"
-      }
-    ]);
+const { data: latestCharacter } = await supabaseAdmin
+  .from('characters')
+  .select('id')
+  .eq('user_id', USER_ID)
+  .order('created_at', { ascending: false })
+  .limit(1)
+  .single();
+    
+await supabase.from('chat_history').insert([
+  {
+    user_id: USER_ID,
+    message: msg,
+    role: "user",
+    character_id: latestCharacter?.id || null
+  },
+  {
+    user_id: USER_ID,
+    message: reply,
+    role: "ai",
+    character_id: latestCharacter?.id || null
+  }
+]);
 
     memoryStore[memoryKey].history = [
       ...limitedHistory,
