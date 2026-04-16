@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { type, email, password, name, profile } = req.body || {};
+  const { type, email, password, name, profile, returnTo } = req.body || {};
 
   if ((type === 'signup' || type === 'login') && (!email || !password)) {
     return res.status(400).json({ error: 'Missing email or password' });
@@ -207,7 +207,7 @@ if (data.session && profile && data.user?.id) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'https://ai-club-one-iota.vercel.app/result.html'
+        redirectTo: `https://ai-club-one-iota.vercel.app/${returnTo || 'index.html'}`
       }
     });
 
