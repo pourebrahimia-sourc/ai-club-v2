@@ -833,8 +833,17 @@ async function saveProfileToDatabase() {
   } catch (e) {}
 }
 async function initResultPage() {
+  const search = new URLSearchParams(window.location.search);
+  const returnTo = search.get('returnTo') || '';
+
   await syncSessionFromUrl();
   await syncStoredSession();
+
+  if (returnTo === 'index.html' && getAccessToken()) {
+    window.location.replace('/index.html');
+    return;
+  }
+
   applyProfileToSummary();
   await saveProfileToDatabase();
   await refreshBalance();
