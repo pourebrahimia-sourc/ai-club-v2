@@ -380,6 +380,38 @@ function getProfile() {
 function getCurrentProfileKey() {
   return JSON.stringify(getProfile());
 }
+function getResultOwnerKey() {
+  return 'resultOwnerUserId';
+}
+
+function getStoredResultOwner() {
+  return localStorage.getItem(getResultOwnerKey()) || '';
+}
+
+function setStoredResultOwner(userId) {
+  if (userId) {
+    localStorage.setItem(getResultOwnerKey(), userId);
+  } else {
+    localStorage.removeItem(getResultOwnerKey());
+  }
+}
+
+function ensureResultBelongsToCurrentUser() {
+  const currentUserId = localStorage.getItem('userId') || '';
+  const storedOwnerId = getStoredResultOwner();
+
+  if (!currentUserId) {
+    clearCharacterState();
+    setStoredResultOwner('');
+    return;
+  }
+
+  if (storedOwnerId && storedOwnerId !== currentUserId) {
+    clearCharacterState();
+  }
+
+  setStoredResultOwner(currentUserId);
+}
 
 function getAccessToken() {
   return localStorage.getItem('accessToken') || '';
@@ -422,6 +454,7 @@ function saveUserSession(user, accessToken, refreshToken) {
   if (user?.id) localStorage.setItem('userId', user.id);
   localStorage.setItem('userEmail', user?.email || '');
   localStorage.setItem('userName', user?.user_metadata?.name || 'User');
+  setStoredResultOwner(user?.id || '');
 }
 
 function readAuthFromUrl() {
@@ -791,6 +824,7 @@ function goSubscribe() {
 async function initResultPage() {
   await syncSessionFromUrl();
   await syncStoredSession();
+  ensureResultBelongsToCurrentUser();
   applyProfileToSummary();
   await refreshBalance();
   applyImageState();
