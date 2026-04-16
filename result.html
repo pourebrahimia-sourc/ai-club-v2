@@ -808,6 +808,30 @@ async function saveProfileToDatabase() {
     });
   } catch (e) {}
 }
+  async function syncStoredSession(){
+  const token = getAccessToken();
+  if (!token) return;
+
+  try {
+    const res = await fetch('/api/session', {
+      headers: authHeaders()
+    });
+    const json = await res.json();
+    const session = json?.data?.session;
+
+    if (session?.user) {
+      saveUserSession(session.user, token, localStorage.getItem('refreshToken') || '');
+
+      const search = new URLSearchParams(window.location.search);
+      const returnTo = search.get('returnTo') || 'index.html';
+
+      if (returnTo !== 'result.html') {
+        window.location.replace('/' + returnTo);
+        return;
+      }
+    }
+  } catch (e) {}
+}
 async function initResultPage() {
   await syncSessionFromUrl();
   await syncStoredSession();
