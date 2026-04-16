@@ -480,6 +480,13 @@ async function syncSessionFromUrl() {
     const user = json.data?.session?.user;
 
     if (user) {
+      const newUserId = user.id;
+
+if (localStorage.getItem('lastUserId') !== newUserId) {
+  clearCharacterState();
+}
+
+localStorage.setItem('lastUserId', newUserId);
       saveUserSession(user, accessToken, refreshToken);
       history.replaceState({}, document.title, window.location.pathname);
     }
