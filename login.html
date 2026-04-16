@@ -297,6 +297,10 @@
       }
     }
 
+    function getPostAuthRedirect(){
+      return 'index.html';
+    }
+
     function togglePassword(id, btn){
       const input = document.getElementById(id);
       if(input.type === 'password'){
@@ -387,7 +391,7 @@
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        window.location.href = 'result.html';
+        window.location.href = getPostAuthRedirect();
       } catch(e){
         setStatus('Signup failed');
       }
@@ -429,7 +433,7 @@
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        window.location.href = 'result.html';
+        window.location.href = getPostAuthRedirect();
       } catch(e){
         setStatus('Login failed');
       }
