@@ -306,40 +306,6 @@ cursor:pointer;
 </div>
 
 <script>
-function clearCharacterState(){
-  [
-    'age',
-    'ethnicity',
-    'body',
-    'bodyDetails',
-    'hair',
-    'appearanceDetails',
-    'personality',
-    'aiImage',
-    'imageUnlocked',
-    'lastProfileKey',
-    'aiName',
-    'recentChats'
-  ].forEach(key => localStorage.removeItem(key));
-}
-
-function enforceCurrentUserCharacterState(){
-  const currentUserId = localStorage.getItem('userId') || '';
-  const resultOwnerUserId = localStorage.getItem('resultOwnerUserId') || '';
-
-  if (!currentUserId) {
-    clearCharacterState();
-    return;
-  }
-
-  if (resultOwnerUserId && resultOwnerUserId !== currentUserId) {
-    clearCharacterState();
-    localStorage.setItem('resultOwnerUserId', currentUserId);
-  }
-}
-
-enforceCurrentUserCharacterState();
-
 const savedImage = localStorage.getItem('aiImage');
 const imageUnlocked = localStorage.getItem('imageUnlocked') === "true";
 const lockOverlay = document.getElementById('lockOverlay');
