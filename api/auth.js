@@ -207,7 +207,7 @@ if (data.session && profile && data.user?.id) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `https://ai-club-one-iota.vercel.app/${returnTo || 'index.html'}`
+        redirectTo: 'https://ai-club-one-iota.vercel.app/result.html'
       }
     });
 
