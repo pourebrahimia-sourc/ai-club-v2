@@ -263,31 +263,11 @@
 <script>
 let isLoggedIn = false;
 
-function clearGeneratedState(){
-  [
-    'age',
-    'ethnicity',
-    'body',
-    'bodyDetails',
-    'hair',
-    'appearanceDetails',
-    'personality',
-    'aiImage',
-    'imageUnlocked',
-    'lastProfileKey',
-    'aiName',
-    'recentChats',
-    'resultOwnerUserId'
-  ].forEach(key => localStorage.removeItem(key));
-}
-
-
 async function checkSession(){
   const token = localStorage.getItem('accessToken');
 
   if(!token){
     isLoggedIn = false;
-    clearGeneratedState();
     return;
   }
 
@@ -300,24 +280,6 @@ async function checkSession(){
 
     const data = await res.json();
     isLoggedIn = !!data?.data?.session;
-
-    if(!isLoggedIn){
-      clearGeneratedState();
-      return;
-    }
-
-    const currentUserId = data?.data?.session?.user?.id || '';
-    const resultOwnerUserId = localStorage.getItem('resultOwnerUserId') || '';
-    const localUserId = localStorage.getItem('userId') || '';
-
-    if ((resultOwnerUserId && currentUserId && resultOwnerUserId !== currentUserId) || (localUserId && currentUserId && localUserId !== currentUserId)) {
-      clearGeneratedState();
-    }
-
-    if (currentUserId) {
-      localStorage.setItem('userId', currentUserId);
-      localStorage.setItem('resultOwnerUserId', currentUserId);
-    }
   } catch(e){
     isLoggedIn = false;
   }
