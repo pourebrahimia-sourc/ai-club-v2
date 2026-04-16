@@ -243,286 +243,283 @@
     </div>
   </div>
 
-  <script>
-    let mode = 'login';
+<script>
+  let mode = 'login';
 
-    const statusEl = document.getElementById('status');
-    const confirmWrap = document.getElementById('confirmWrap');
-    const pageTitle = document.getElementById('pageTitle');
-    const pageSubtitle = document.getElementById('pageSubtitle');
-    const mainBtn = document.getElementById('mainBtn');
-    const forgotLink = document.getElementById('forgotLink');
-    const loginModeBtn = document.getElementById('loginModeBtn');
-    const signupModeBtn = document.getElementById('signupModeBtn');
+  const statusEl = document.getElementById('status');
+  const confirmWrap = document.getElementById('confirmWrap');
+  const pageTitle = document.getElementById('pageTitle');
+  const pageSubtitle = document.getElementById('pageSubtitle');
+  const mainBtn = document.getElementById('mainBtn');
+  const forgotLink = document.getElementById('forgotLink');
+  const loginModeBtn = document.getElementById('loginModeBtn');
+  const signupModeBtn = document.getElementById('signupModeBtn');
 
-    function setStatus(text){
-      statusEl.innerText = text || '';
-    }
-
-    function saveAuth(data){
-      if (data?.session?.access_token) {
-        localStorage.setItem('accessToken', data.session.access_token);
-      }
-      if (data?.session?.refresh_token) {
-        localStorage.setItem('refreshToken', data.session.refresh_token);
-      }
-      if (data?.user?.id) {
-        localStorage.setItem('userId', data.user.id);
-      }
-      localStorage.setItem('userEmail', data?.user?.email || '');
-      localStorage.setItem('userName', data?.user?.user_metadata?.name || 'User');
-    }
-
-    function clearGeneratedState(){
-      [
-        'age',
-        'ethnicity',
-        'body',
-        'bodyDetails',
-        'hair',
-        'appearanceDetails',
-        'personality',
-        'aiImage',
-        'imageUnlocked',
-        'lastProfileKey',
-        'aiName',
-        'recentChats'
-      ].forEach(key => localStorage.removeItem(key));
-    }
-
-    function resetStateIfUserChanged(nextUserId){
-      const previousUserId = localStorage.getItem('userId');
-      if(previousUserId && nextUserId && previousUserId !== nextUserId){
-        clearGeneratedState();
-      }
-    }
-
-    function togglePassword(id, btn){
-      const input = document.getElementById(id);
-      if(input.type === 'password'){
-        input.type = 'text';
-        btn.innerText = 'Hide';
-      } else {
-        input.type = 'password';
-        btn.innerText = 'Show';
-      }
-    }
-
-    function setMode(newMode){
-      mode = newMode;
-
-      if(mode === 'login'){
-        document.getElementById('nameWrap').style.display = 'none';
-        confirmWrap.style.display = 'none';
-        pageTitle.innerText = 'Login';
-        pageSubtitle.innerText = 'Sign in to continue to your AI girlfriend';
-        mainBtn.innerText = 'Login';
-        forgotLink.style.display = 'block';
-        loginModeBtn.classList.add('active');
-        signupModeBtn.classList.remove('active');
-      } else {
-        document.getElementById('nameWrap').style.display = 'block';
-        confirmWrap.style.display = 'block';
-        pageTitle.innerText = 'Sign Up';
-        pageSubtitle.innerText = 'Create your account';
-        mainBtn.innerText = 'Create Account';
-        forgotLink.style.display = 'none';
-        signupModeBtn.classList.add('active');
-        loginModeBtn.classList.remove('active');
-      }
-
-      setStatus('');
-    }
-
-    async function submitAuth(){
-      if(mode === 'login'){
-        await login();
-      } else {
-        await signup();
-      }
-    }
-
-    async function signup(){
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const confirmPassword = document.getElementById('confirmPassword').value.trim();
-      const name = document.getElementById('name').value.trim();
-
-      if(!email || !password || !confirmPassword || !name){
-        setStatus('Fill all fields');
-        return;
-      }
-
-      if(password !== confirmPassword){
-        setStatus('Passwords do not match');
-        return;
-      }
-
-      setStatus('Creating account...');
-
-      try{
-        const res = await fetch('/api/auth', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-body: JSON.stringify({
-  type:'signup',
-  email,
-  password,
-  name,
-  profile: {
-    age: localStorage.getItem('age'),
-    ethnicity: localStorage.getItem('ethnicity'),
-    body: localStorage.getItem('body'),
-    bodyDetails: localStorage.getItem('bodyDetails'),
-    hair: localStorage.getItem('hair'),
-    appearanceDetails: localStorage.getItem('appearanceDetails'),
-    personality: localStorage.getItem('personality')
+  function setStatus(text){
+    statusEl.innerText = text || '';
   }
-})
-        });
 
-        const data = await res.json();
-
-        if(data.error){
-          setStatus(data.error);
-          return;
-        }
-
-        if (!data.session?.access_token) {
-          setStatus('Account created. Please check your email, then log in.');
-          setMode('login');
-          return;
-        }
-
-        resetStateIfUserChanged(data?.user?.id);
-        saveAuth(data);
-        window.location.href = 'result.html';
-      } catch(e){
-        setStatus('Signup failed');
-      }
+  function saveAuth(data){
+    if (data?.session?.access_token) {
+      localStorage.setItem('accessToken', data.session.access_token);
     }
-
-    async function login(){
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      if(!email || !password){
-        setStatus('Enter email and password');
-        return;
-      }
-
-      setStatus('Logging in...');
-
-      try{
-        const res = await fetch('/api/auth', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-body: JSON.stringify({
-  type:'login',
-  email,
-  password,
-  profile: {
-    age: localStorage.getItem('age'),
-    ethnicity: localStorage.getItem('ethnicity'),
-    body: localStorage.getItem('body'),
-    bodyDetails: localStorage.getItem('bodyDetails'),
-    hair: localStorage.getItem('hair'),
-    appearanceDetails: localStorage.getItem('appearanceDetails'),
-    personality: localStorage.getItem('personality')
+    if (data?.session?.refresh_token) {
+      localStorage.setItem('refreshToken', data.session.refresh_token);
+    }
+    if (data?.user?.id) {
+      localStorage.setItem('userId', data.user.id);
+    }
+    localStorage.setItem('userEmail', data?.user?.email || '');
+    localStorage.setItem('userName', data?.user?.user_metadata?.name || 'User');
   }
-})
-        });
 
-        const data = await res.json();
+  function clearGeneratedState(){
+    [
+      'age',
+      'ethnicity',
+      'body',
+      'bodyDetails',
+      'hair',
+      'appearanceDetails',
+      'personality',
+      'aiImage',
+      'imageUnlocked',
+      'lastProfileKey',
+      'aiName',
+      'recentChats'
+    ].forEach(key => localStorage.removeItem(key));
+  }
 
-        if(data.error){
-          setStatus(data.error);
-          return;
-        }
+  function resetStateIfUserChanged(nextUserId){
+    const previousUserId = localStorage.getItem('userId');
+    if(previousUserId && nextUserId && previousUserId !== nextUserId){
+      clearGeneratedState();
+    }
+  }
 
-        if (!data.session?.access_token) {
-          setStatus('Login session failed');
-          return;
-        }
+  function togglePassword(id, btn){
+    const input = document.getElementById(id);
+    if(input.type === 'password'){
+      input.type = 'text';
+      btn.innerText = 'Hide';
+    } else {
+      input.type = 'password';
+      btn.innerText = 'Show';
+    }
+  }
 
-        resetStateIfUserChanged(data?.user?.id);
-        saveAuth(data);
-       const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
-localStorage.removeItem('loginReturnTo');
-window.location.href = returnTo;
-      } catch(e){
-        setStatus('Login failed');
-      }
+  function setMode(newMode){
+    mode = newMode;
+
+    if(mode === 'login'){
+      document.getElementById('nameWrap').style.display = 'none';
+      confirmWrap.style.display = 'none';
+      pageTitle.innerText = 'Login';
+      pageSubtitle.innerText = 'Sign in to continue to your AI girlfriend';
+      mainBtn.innerText = 'Login';
+      forgotLink.style.display = 'block';
+      loginModeBtn.classList.add('active');
+      signupModeBtn.classList.remove('active');
+    } else {
+      document.getElementById('nameWrap').style.display = 'block';
+      confirmWrap.style.display = 'block';
+      pageTitle.innerText = 'Sign Up';
+      pageSubtitle.innerText = 'Create your account';
+      mainBtn.innerText = 'Create Account';
+      forgotLink.style.display = 'none';
+      signupModeBtn.classList.add('active');
+      loginModeBtn.classList.remove('active');
     }
 
-    async function googleLogin(){
-      try{
-        localStorage.setItem(
-  'loginReturnTo',
-  localStorage.getItem('loginReturnTo') || 'index.html'
-);
-        const res = await fetch('/api/auth', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-body: JSON.stringify({
-  type: 'google',
-  returnTo: localStorage.getItem('loginReturnTo') || 'index.html'
-})
-        });
+    setStatus('');
+  }
 
-        const data = await res.json();
+  async function submitAuth(){
+    if(mode === 'login'){
+      await login();
+    } else {
+      await signup();
+    }
+  }
 
-        if(data.error){
-          setStatus(data.error);
-          return;
-        }
+  async function signup(){
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+    const name = document.getElementById('name').value.trim();
 
-        window.location.href = data.url;
-      } catch(e){
-        setStatus('Google login failed');
-      }
+    if(!email || !password || !confirmPassword || !name){
+      setStatus('Fill all fields');
+      return;
     }
 
-    async function forgotPassword(){
-      const email = document.getElementById('email').value.trim();
+    if(password !== confirmPassword){
+      setStatus('Passwords do not match');
+      return;
+    }
 
-      if(!email){
-        setStatus('Enter your email');
+    setStatus('Creating account...');
+
+    try{
+      const res = await fetch('/api/auth', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          type:'signup',
+          email,
+          password,
+          name,
+          profile: {
+            age: localStorage.getItem('age'),
+            ethnicity: localStorage.getItem('ethnicity'),
+            body: localStorage.getItem('body'),
+            bodyDetails: localStorage.getItem('bodyDetails'),
+            hair: localStorage.getItem('hair'),
+            appearanceDetails: localStorage.getItem('appearanceDetails'),
+            personality: localStorage.getItem('personality')
+          }
+        })
+      });
+
+      const data = await res.json();
+
+      if(data.error){
+        setStatus(data.error);
         return;
       }
 
-      setStatus('Sending reset email...');
-
-      try{
-        const res = await fetch('/api/auth', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            type:'forgot',
-            email
-          })
-        });
-
-        const data = await res.json();
-
-        if(data.error){
-          setStatus(data.error);
-          return;
-        }
-
-        setStatus('Reset email sent ✔️');
-      } catch(e){
-        setStatus('Error sending email');
+      if (!data.session?.access_token) {
+        setStatus('Account created. Please check your email, then log in.');
+        setMode('login');
+        return;
       }
+
+      resetStateIfUserChanged(data?.user?.id);
+      saveAuth(data);
+      window.location.href = 'result.html';
+    } catch(e){
+      setStatus('Signup failed');
+    }
+  }
+
+  async function login(){
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if(!email || !password){
+      setStatus('Enter email and password');
+      return;
     }
 
-    setMode('login');
-    function closeLogin(){
-  const returnTo = localStorage.getItem('loginReturnTo');
-  localStorage.removeItem('loginReturnTo');
-  window.location.href = returnTo || 'index.html';
-}
-  </script>
+    setStatus('Logging in...');
+
+    try{
+      const res = await fetch('/api/auth', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          type:'login',
+          email,
+          password,
+          profile: {
+            age: localStorage.getItem('age'),
+            ethnicity: localStorage.getItem('ethnicity'),
+            body: localStorage.getItem('body'),
+            bodyDetails: localStorage.getItem('bodyDetails'),
+            hair: localStorage.getItem('hair'),
+            appearanceDetails: localStorage.getItem('appearanceDetails'),
+            personality: localStorage.getItem('personality')
+          }
+        })
+      });
+
+      const data = await res.json();
+
+      if(data.error){
+        setStatus(data.error);
+        return;
+      }
+
+      if (!data.session?.access_token) {
+        setStatus('Login session failed');
+        return;
+      }
+
+      resetStateIfUserChanged(data?.user?.id);
+      saveAuth(data);
+
+      const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+      localStorage.removeItem('loginReturnTo');
+      window.location.href = returnTo;
+    } catch(e){
+      setStatus('Login failed');
+    }
+  }
+
+  async function googleLogin(){
+    try{
+      const res = await fetch('/api/auth', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          type:'google'
+        })
+      });
+
+      const data = await res.json();
+
+      if(data.error){
+        setStatus(data.error);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch(e){
+      setStatus('Google login failed');
+    }
+  }
+
+  async function forgotPassword(){
+    const email = document.getElementById('email').value.trim();
+
+    if(!email){
+      setStatus('Enter your email');
+      return;
+    }
+
+    setStatus('Sending reset email...');
+
+    try{
+      const res = await fetch('/api/auth', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          type:'forgot',
+          email
+        })
+      });
+
+      const data = await res.json();
+
+      if(data.error){
+        setStatus(data.error);
+        return;
+      }
+
+      setStatus('Reset email sent ✔️');
+    } catch(e){
+      setStatus('Error sending email');
+    }
+  }
+
+  function closeLogin(){
+    const returnTo = localStorage.getItem('loginReturnTo');
+    localStorage.removeItem('loginReturnTo');
+    window.location.href = returnTo || 'index.html';
+  }
+
+  setMode('login');
+</script>
 
 </body>
 </html>
