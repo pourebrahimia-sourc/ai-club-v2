@@ -447,7 +447,9 @@ body: JSON.stringify({
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        window.location.href = 'result.html';
+       const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+localStorage.removeItem('loginReturnTo');
+window.location.href = returnTo;
       } catch(e){
         setStatus('Login failed');
       }
@@ -458,9 +460,10 @@ body: JSON.stringify({
         const res = await fetch('/api/auth', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            type:'google'
-          })
+body: JSON.stringify({
+  type: 'google',
+  returnTo: localStorage.getItem('loginReturnTo') || 'index.html'
+})
         });
 
         const data = await res.json();
