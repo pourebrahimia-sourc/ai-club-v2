@@ -456,6 +456,7 @@ async function syncSessionFromUrl() {
       history.replaceState({}, document.title, window.location.pathname);
 
       if (returnTo !== 'result.html') {
+        alert(returnTo);
         window.location.replace('/' + returnTo);
         return;
       }
