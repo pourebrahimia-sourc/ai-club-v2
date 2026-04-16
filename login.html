@@ -457,28 +457,28 @@
   }
 
   async function googleLogin(){
-    try{
-      const res = await fetch('/api/auth', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-body: JSON.stringify({
-  type: 'google',
-  returnTo: localStorage.getItem('loginReturnTo') || 'index.html'
-})
-      });
+  try{
+    const res = await fetch('/api/auth', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        type: 'google',
+        returnTo: localStorage.getItem('loginReturnTo') || 'index.html'
+      })
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if(data.error){
-        setStatus(data.error);
-        return;
-      }
-
-      window.location.href = data.url;
-    } catch(e){
-      setStatus('Google login failed');
+    if(data.error){
+      setStatus(data.error);
+      return;
     }
+
+    window.location.href = data.url;
+  } catch(e){
+    setStatus('Google login failed');
   }
+}
 
   async function forgotPassword(){
     const email = document.getElementById('email').value.trim();
