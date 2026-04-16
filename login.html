@@ -457,6 +457,10 @@ window.location.href = returnTo;
 
     async function googleLogin(){
       try{
+        localStorage.setItem(
+  'loginReturnTo',
+  localStorage.getItem('loginReturnTo') || 'index.html'
+);
         const res = await fetch('/api/auth', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
