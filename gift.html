@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gifts - AI Club</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .section-title{ font-size:18px; margin:20px 0 10px; font-weight:700; }
+    .gift-card{ background:#1a1a1a; border:1px solid #2b2b2b; border-radius:16px; padding:14px; margin-bottom:12px; }
+    .gift-row{ display:flex; justify-content:space-between; align-items:center; }
+    .gift-title{ font-size:14px; font-weight:700; }
+    .gift-desc{ font-size:12px; opacity:0.7; margin-top:4px; }
+    .gift-btn{ padding:8px 14px; border-radius:10px; border:none; background:#ff4fa3; color:#fff; font-size:12px; cursor:pointer; font-weight:700; transition: 0.3s; }
+    
+    .gift-btn:disabled { background: #333 !important; color: #777; cursor: not-allowed; }
+
+    .referral-box{ display:flex; justify-content:space-between; gap:8px; margin-top:12px; }
+    .ref-circle{ flex:1; height:50px; border-radius:12px; background:#111; border:1px solid #2b2b2b; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12px; }
+    .ref-active{ border:1px solid #ff4fa3; color:#ff4fa3; }
+
+    #toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: #ff4fa3; color: white; padding: 12px 24px;
+      border-radius: 14px; font-size: 14px; font-weight: 700;
+      display: none; z-index: 1000; box-shadow: 0 10px 30px rgba(255, 79, 163, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- هدر کامل و هماهنگ با بقیه صفحات -->
+<div class="header">
+  <div style="font-weight:700;font-size:18px; cursor:pointer;" onclick="window.location.href='result.html'">
+    ← AI Club
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="window.location.href='subscribe.html'" style="padding:6px 12px; border-radius:10px; border:none; background:#ff4fa3; color:#fff; font-size:12px; cursor:pointer;">
+      Subscribe
+    </button>
+    <div id="tokenBalance" style="background:#1a1a1a; padding:6px 10px; border-radius:10px; font-size:12px;">
+      💰 ...
+    </div>
+    <div onclick="window.location.href='profile.html'" style="width:34px; height:34px; border-radius:50%; background:#2a2a2a; border:1px solid #3a3a3a; display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden;">
+      <span style="font-size:14px;">👤</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">Invite Friends</div>
+<div class="gift-card">
+  <div class="gift-title">Earn tokens by inviting friends</div>
+  <div class="referral-box">
+    <div class="ref-circle ref-active">5<br>+50</div>
+    <div class="ref-circle">10<br>+100</div>
+    <div class="ref-circle">20<br>+250</div>
+  </div>
+  <button id="copyBtn" class="gift-btn" style="margin-top:12px;width:100%;">
+    Copy Referral Link
+  </button>
+</div>
+
+<div class="section-title">Daily Rewards</div>
+<div class="gift-card">
+  <div class="gift-row">
+    <div>
+      <div class="gift-title">Daily Login</div>
+      <div class="gift-desc">Get free tokens every day</div>
+    </div>
+    <button class="gift-btn" onclick="claimGift('daily', this)">Claim +10</button>
+  </div>
+</div>
+
+<div class="gift-card">
+  <div class="gift-row">
+    <div>
+      <div class="gift-title">Watch Ads</div>
+      <div class="gift-desc">2 ads = 5 tokens</div>
+    </div>
+    <button class="gift-btn" onclick="claimGift('ad', this)">Watch</button>
+  </div>
+</div>
+
+<div class="gift-card">
+  <div class="gift-row">
+    <div>
+      <div class="gift-title">Share</div>
+      <div class="gift-desc">Share app (2x daily)</div>
+    </div>
+    <button class="gift-btn" onclick="claimGift('share', this)">Share</button>
+  </div>
+</div>
+
+<script>
+function getAccessToken(){ return localStorage.getItem('accessToken') || ''; }
+function authHeaders(extra = {}){
+  const token = getAccessToken();
+  return token ? { ...extra, Authorization: 'Bearer ' + token } : extra;
+}
+
+function showNotification(msg) {
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 3000);
+}
+
+// تابع جدید برای آپدیت لحظه‌ای موجودی در هدر
+async function refreshHeaderBalance() {
+  try {
+    const res = await fetch('/api/wallet', { headers: authHeaders() });
+    const data = await res.json();
+    if (data.balance !== undefined) {
+      document.getElementById('tokenBalance').innerText = "💰 " + data.balance;
+    }
+  } catch (e) {
+    document.getElementById('tokenBalance').innerText = "💰 0";
+  }
+}
+
+async function claimGift(type, btn) {
+  const originalText = btn.innerText;
+  btn.innerText = '...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/gifts', {
+      method: 'POST',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ type })
+    });
+    const data = await res.json();
+    
+    if (data.error) {
+      showNotification(data.error === 'Already claimed today' ? 'Already claimed today!' : data.error);
+      if (data.error !== 'Already claimed today') {
+        btn.disabled = false;
+        btn.innerText = originalText;
+      } else {
+        btn.innerText = 'Claimed';
+      }
+    } else {
+      btn.innerText = 'Claimed';
+      showNotification('Success! Tokens added.');
+      // بلافاصله موجودی هدر را آپدیت کن
+      refreshHeaderBalance();
+    }
+  } catch (e) { 
+    showNotification('Connection error');
+    btn.disabled = false;
+    btn.innerText = originalText;
+  }
+}
+
+function copyReferral() {
+  const userId = localStorage.getItem('userId');
+  if (!userId) { showNotification('Please login first'); return; }
+  const refLink = window.location.origin + '/age.html?ref=' + userId;
+  navigator.clipboard.writeText(refLink).then(() => {
+    showNotification('Referral link copied!');
+  });
+}
+
+// اجرای توابع در بدو ورود به صفحه
+document.addEventListener('DOMContentLoaded', () => {
+  if(!getAccessToken()){
+    localStorage.setItem('loginReturnTo', 'gift.html');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  refreshHeaderBalance();
+  document.getElementById('copyBtn').onclick = copyReferral;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hair Color</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps"><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+</div>
+<h2 class="title">Hair Color</h2>
+<p class="subtitle">Which hair color do you find most attractive on a woman?</p>
+<div class="triple-grid">
+  <div class="mini-card" data-value="blonde" onclick="selectHair('blonde', this)"><img src="images/hair1.png" alt="Blonde"><span>Blonde</span></div>
+  <div class="mini-card" data-value="brunette" onclick="selectHair('brunette', this)"><img src="images/hair2.png" alt="Brunette"><span>Brunette</span></div>
+  <div class="mini-card" data-value="black" onclick="selectHair('black', this)"><img src="images/hair3.png" alt="Black"><span>Black</span></div>
+  <div class="mini-card" data-value="red" onclick="selectHair('red', this)"><img src="images/hair4.png" alt="Red"><span>Red</span></div>
+  <div class="mini-card" data-value="unnatural-colors" onclick="selectHair('unnatural-colors', this)"><img src="images/hair5.png" alt="Unnatural Colors"><span>Unnatural<br>colors</span></div>
+  <div class="mini-card" data-value="no-preferences" onclick="selectHair('no-preferences', this)"><img src="images/hair6.png" alt="No Preferences"><span>No<br>preferences</span></div>
+</div>
+<script>
+function selectHair(value, el){
+  localStorage.setItem('hair', value);
+  document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'appearance-details.html';
+}
+function goBack(){ history.back(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('hair');
+  if(!saved) return;
+  document.querySelectorAll('.mini-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

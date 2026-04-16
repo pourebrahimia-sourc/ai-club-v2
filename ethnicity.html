@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethnicity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps"><span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+</div>
+<h2 class="title">Choose Ethnicity</h2>
+<div class="horizontal-grid">
+  <div class="horizontal-card" data-value="caucasian" onclick="selectEth('caucasian', this)"><img src="images/eth1.png" alt="Caucasian"><span>Caucasian</span></div>
+  <div class="horizontal-card" data-value="asian" onclick="selectEth('asian', this)"><img src="images/eth2.png" alt="Asian"><span>Asian</span></div>
+  <div class="horizontal-card" data-value="latina" onclick="selectEth('latina', this)"><img src="images/eth3.png" alt="Latina"><span>Latina</span></div>
+  <div class="horizontal-card" data-value="black" onclick="selectEth('black', this)"><img src="images/eth4.png" alt="Black"><span>Black</span></div>
+  <div class="horizontal-card" data-value="middle-eastern" onclick="selectEth('middle-eastern', this)"><img src="images/eth5.png" alt="Middle Eastern"><span>Middle Eastern</span></div>
+</div>
+<script>
+function selectEth(value, el){
+  localStorage.setItem('ethnicity', value);
+  document.querySelectorAll('.horizontal-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'body.html';
+}
+function goBack(){ history.back(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('ethnicity');
+  if(!saved) return;
+  document.querySelectorAll('.horizontal-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

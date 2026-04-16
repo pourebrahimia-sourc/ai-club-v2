@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Age</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps"><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+</div>
+<h2 class="title">Choose Age</h2>
+<div class="square-grid">
+  <div class="square-card" data-value="18-21" onclick="selectAge('18-21', this)"><div class="square-image"><img src="images/age1.png" alt="18-21"></div><div class="square-label">18–21</div></div>
+  <div class="square-card" data-value="22-25" onclick="selectAge('22-25', this)"><div class="square-image"><img src="images/age2.png" alt="22-25"></div><div class="square-label">22–25</div></div>
+  <div class="square-card" data-value="26-30" onclick="selectAge('26-30', this)"><div class="square-image"><img src="images/age3.png" alt="26-30"></div><div class="square-label">26–30</div></div>
+  <div class="square-card" data-value="30+" onclick="selectAge('30+', this)"><div class="square-image"><img src="images/age4.png" alt="30+"></div><div class="square-label">30+</div></div>
+</div>
+<script>
+function selectAge(value, el){
+  localStorage.setItem('age', value);
+  document.querySelectorAll('.square-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'ethnicity.html';
+}
+function goBack(){
+  const from = localStorage.getItem('funnelFrom');
+
+  if(from === 'result'){
+    window.location.href = 'result.html';
+  } else {
+    window.location.href = 'index.html';
+  }
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('age');
+  if(!saved) return;
+  document.querySelectorAll('.square-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

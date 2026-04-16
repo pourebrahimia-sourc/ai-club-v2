@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Appearance Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps">
+    <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span>
+  </div>
+</div>
+<h2 class="title">Appearance Details</h2>
+<p class="subtitle">Choose the look you like most</p>
+<div class="triple-grid">
+  <div class="mini-card" data-value="tattoos" onclick="selectAppearance('tattoos', this)"><img src="images/appearance1.png" alt="Tattoos"><span>Tattoos</span></div>
+  <div class="mini-card" data-value="freckles" onclick="selectAppearance('freckles', this)"><img src="images/appearance2.png" alt="Freckles"><span>Freckles</span></div>
+  <div class="mini-card" data-value="tooth-gap" onclick="selectAppearance('tooth-gap', this)"><img src="images/appearance3.png" alt="Tooth Gap"><span>Tooth<br>gap</span></div>
+  <div class="mini-card" data-value="makeup" onclick="selectAppearance('makeup', this)"><img src="images/appearance4.png" alt="Makeup"><span>Makeup</span></div>
+<div class="mini-card" data-value="glowing-skin" onclick="selectAppearance('glowing-skin', this)"><img src="images/appearance5.png" alt="Glowing Skin"><span>Glowing<br>skin</span></div>
+  <div class="mini-card" data-value="no-makeup" onclick="selectAppearance('no-makeup', this)"><img src="images/appearance6.png" alt="No Makeup"><span>No<br>makeup</span></div>
+</div>
+<script>
+function selectAppearance(value, el){
+  localStorage.setItem('appearanceDetails', value);
+  document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'personality.html';
+}
+function goBack(){ history.back(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('appearanceDetails');
+  if(!saved) return;
+  document.querySelectorAll('.mini-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

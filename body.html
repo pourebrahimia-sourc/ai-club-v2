@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Body Type</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps"><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+</div>
+<h2 class="title">Body Type</h2>
+<div class="square-grid">
+  <div class="square-card" data-value="slim" onclick="selectBody('slim', this)"><div class="square-image"><img src="images/body1.png" alt="Slim"></div><div class="square-label">Slim</div></div>
+  <div class="square-card" data-value="fit" onclick="selectBody('fit', this)"><div class="square-image"><img src="images/body2.png" alt="Fit"></div><div class="square-label">Fit</div></div>
+  <div class="square-card" data-value="curvy" onclick="selectBody('curvy', this)"><div class="square-image"><img src="images/body3.png" alt="Curvy"></div><div class="square-label">Curvy</div></div>
+  <div class="square-card" data-value="thick" onclick="selectBody('thick', this)"><div class="square-image"><img src="images/body4.png" alt="Thick"></div><div class="square-label">Thick</div></div>
+</div>
+<script>
+function selectBody(value, el){
+  localStorage.setItem('body', value);
+  document.querySelectorAll('.square-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'body-details.html';
+}
+function goBack(){ history.back(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('body');
+  if(!saved) return;
+  document.querySelectorAll('.square-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

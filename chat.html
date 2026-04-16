@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Club ChatTop</title>
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  padding:18px 14px 16px;
+  box-sizing:border-box;
+  color:#fff;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#111;
+  position:relative;
+  overflow:hidden;
+}
+  html, body{
+  width:100%;
+}
+
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  background:#111;
+}
+
+.bg video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(10px);
+  transform:scale(1.1);
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+}
+
+.logo,
+.title,
+#chat,
+#input,
+.action-row{
+  position:relative;
+  z-index:2;
+}
+
+.logo{
+  text-align:center;
+  font-size:20px;
+  font-weight:700;
+  margin:0 0 8px 0;
+}
+
+.title{
+  text-align:center;
+  font-size:26px;
+  line-height:1.25;
+  margin:0 0 12px 0;
+}
+
+#chat{
+  height:20vh;
+  margin-top:auto;
+  overflow:auto;
+  padding:14px 12px;
+  margin-bottom:10px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.10);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+#chat::-webkit-scrollbar{
+  width:6px;
+}
+
+#chat::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+#chat::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,0.28);
+  border-radius:999px;
+}
+
+#chat::-webkit-scrollbar-thumb:hover{
+  background:rgba(255,255,255,0.42);
+}
+#chat p{
+  margin:0 0 10px 0;
+  line-height:1.45;
+  word-break:break-word;
+}
+
+#input{
+  width:100%;
+  box-sizing:border-box;
+  padding:14px 14px;
+  border:none;
+  outline:none;
+  border-radius:16px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#fff;
+  font-size:16px;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+#input::placeholder{
+  color:rgba(255,255,255,0.65);
+}
+
+.action-row{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.btn{
+  height:52px;
+  border:none;
+  border-radius:16px;
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  background:rgba(255,79,163,0.72);
+  border:1px solid rgba(255,79,163,0.45);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 8px 24px rgba(255,79,163,0.18);
+}
+
+.talk-btn{
+  flex:1;
+}
+
+.voice-btn{
+  width:64px;
+  flex:0 0 64px;
+}
+
+@media (min-width:768px){
+  body{
+    width:420px;
+    margin:0 auto;
+    padding:24px 16px 20px;
+  }
+
+.bg video{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:420px;
+  height:760px;
+  transform: translate(-50%, -50%) scale(1.05);
+  object-fit:cover;
+  border-radius:28px;
+  border:1px solid rgba(255,79,163,0.45);
+  box-shadow:0 0 0 1px rgba(255,79,163,0.12), 0 20px 80px rgba(0,0,0,0.45);
+}
+
+  #chat{
+    max-height:500px;
+  }
+}
+  .top-area{
+  position:relative;
+  z-index:2;
+}
+
+.bottom-area{
+  position:fixed;
+  left:14px;
+  right:14px;
+  bottom:16px;
+  z-index:2;
+}
+  @media (min-width:768px){
+  .bottom-area{
+    width:420px;
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+  }
+}
+  .character-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+  padding:8px 10px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);
+}
+
+.avatar{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background-position:center 3px;
+  background-size:120%;
+}
+
+.char-info{
+  display:flex;
+  flex-direction:column;
+}
+
+.char-name{
+  font-size:15px;
+  font-weight:700;
+}
+
+.char-status{
+  font-size:12px;
+  color:rgba(255,255,255,0.6);
+}
+</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+</head>
+<body>
+<div class="bg">
+  <img id="bgImage" style="position:absolute;top:50%;left:50%;width:420px;height:760px;transform:translate(-50%,-50%) scale(1.05);object-fit:cover;filter:blur(12px);border-radius:28px;border:1px solid rgba(255,79,163,0.45);box-shadow:0 0 0 1px rgba(255,79,163,0.12), 0 20px 80px rgba(0,0,0,0.45);">
+<div id="imageLoading" style="
+display:none;
+position:absolute;
+inset:0;
+z-index:7;
+align-items:center;
+justify-content:center;
+background:rgba(0,0,0,0.28);
+border-radius:18px;
+backdrop-filter:blur(3px);
+-webkit-backdrop-filter:blur(3px);
+">
+  <div style="
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,0.18);
+  border-top:3px solid #ff4fa3;
+  animation:spin 0.9s linear infinite;
+  box-shadow:0 0 24px rgba(255,79,163,0.35);
+  "></div>
+</div>
+  <div id="lockOverlay" style="
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%, -50%);
+z-index:6;
+width:110px;
+height:110px;
+border-radius:50%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:6px;
+background:rgba(0,0,0,0.52);
+border:1.5px solid rgba(255,255,255,0.7);
+backdrop-filter:blur(4px);
+-webkit-backdrop-filter:blur(4px);
+color:#fff;
+cursor:pointer;
+">
+  <div style="font-size:34px;line-height:1;">🔒</div>
+  <div style="font-size:12px;font-weight:700;line-height:1.2;">Unlock</div>
+  <div style="font-size:11px;opacity:0.9;line-height:1;">10 tokens</div>
+</div>
+</div>
+
+<div class="top-area">
+  <div class="logo">AI Club</div>
+  <h2 class="title">Your AI Girlfriend 💖</h2>
+</div>
+  <div class="character-header">
+  <div class="avatar"></div>
+
+  <div class="char-info">
+    <div id="charName" class="char-name">Zara</div>
+    <div id="charStatus" class="char-status">Online</div>
+  </div>
+</div>
+<div class="bottom-area">
+  <div id="chat" class="chat-box"></div>
+  <input id="input" class="chat-input" placeholder="Say something...">
+  <div class="action-row">
+    <button class="btn talk-btn" onclick="talk()">Talk</button>
+    <button id="voiceBtn" class="btn voice-btn" onclick="startVoice()">🎤</button>
+  </div>
+</div>
+
+<script>
+const savedImage = localStorage.getItem('aiImage');
+const imageUnlocked = localStorage.getItem('imageUnlocked') === "true";
+const lockOverlay = document.getElementById('lockOverlay');
+
+function getAccessToken() {
+  return localStorage.getItem('accessToken') || '';
+}
+
+function authHeaders(extra = {}) {
+  const token = getAccessToken();
+  return token
+    ? { ...extra, Authorization: 'Bearer ' + token }
+    : extra;
+}
+
+if (!getAccessToken()) {
+  window.location.href = 'login.html';
+}
+
+function openTokenModal() {
+  const tokenModal = document.getElementById('tokenModal');
+  if (tokenModal) tokenModal.style.display = "flex";
+}
+
+function closeModal() {
+  const tokenModal = document.getElementById('tokenModal');
+  if (tokenModal) tokenModal.style.display = "none";
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'closeTokenModal') closeModal();
+  if (e.target && e.target.id === 'tokenModal') closeModal();
+});
+
+lockOverlay.addEventListener('click', async () => {
+  if (imageUnlocked) return;
+  const loading = document.getElementById('imageLoading');
+  loading.style.display = "flex";
+
+  try {
+    const res = await fetch('/api', {
+      method: 'POST',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({
+        msg: "generate image",
+        name: aiName,
+        profile: getCharacterProfile()
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.error === "Not enough tokens") {
+      openTokenModal();
+      loading.style.display = "none";
+      return;
+    }
+
+    if (data.imageUrl) {
+      localStorage.setItem('aiImage', data.imageUrl);
+      localStorage.setItem('imageUnlocked', "true");
+      loading.style.display = "none";
+      location.reload();
+      return;
+    }
+
+    loading.style.display = "none";
+  } catch (e) {
+    loading.style.display = "none";
+    alert("Error generating image");
+  }
+});
+
+if (imageUnlocked) {
+  lockOverlay.style.display = "none";
+} else {
+  lockOverlay.style.display = "flex";
+}
+const bgImage = document.getElementById('bgImage');
+const avatar = document.querySelector('.avatar');
+
+if (imageUnlocked && savedImage) {
+  bgImage.src = savedImage;
+  bgImage.style.filter = "blur(0px)";
+} else {
+  bgImage.src = "images/locked-preview.png";
+  bgImage.style.filter = "blur(12px)";
+}
+if (imageUnlocked && savedImage) {
+  avatar.style.display = "block";
+  avatar.style.backgroundImage = `url(${savedImage})`;
+  avatar.style.backgroundColor = "transparent";
+  lockOverlay.style.display = "none";
+} else {
+  avatar.style.display = "block";
+  avatar.style.backgroundImage = "none";
+  avatar.style.backgroundColor = "#2a2a2a";
+  lockOverlay.style.display = "flex";
+}
+let history = [];
+let lastInputWasVoice = false;
+
+const names = ['Luna','Mia','Nora','Eva','Zara'];
+let aiName = localStorage.getItem('aiName');
+
+if(!aiName){
+  aiName = names[Math.floor(Math.random() * names.length)];
+  localStorage.setItem('aiName', aiName);
+}
+
+const chat = document.getElementById('chat');
+const input = document.getElementById('input');
+document.getElementById('charName').innerText = aiName;
+const voiceBtn = document.getElementById('voiceBtn');
+
+speechSynthesis.getVoices();
+
+function getCharacterProfile(){
+  return {
+    age: localStorage.getItem('age') || '',
+    ethnicity: localStorage.getItem('ethnicity') || '',
+    body: localStorage.getItem('body') || '',
+    bodyDetails: localStorage.getItem('bodyDetails') || '',
+    hair: localStorage.getItem('hair') || '',
+    appearanceDetails: localStorage.getItem('appearanceDetails') || '',
+    personality: localStorage.getItem('personality') || ''
+  };
+}
+
+function addMessage(sender, text, color){
+  chat.innerHTML += `<p><b style="color:${color};">${sender}:</b> ${text}</p>`;
+  chat.scrollTop = chat.scrollHeight;
+
+  if(sender === aiName && lastInputWasVoice){
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'en-US';
+    speech.pitch = 1.4;
+    speech.rate = 0.95;
+    speech.volume = 1;
+    speech.voice = speechSynthesis.getVoices().find(v => v.name.includes('Female')) || speechSynthesis.getVoices()[0];
+    speechSynthesis.cancel();
+    window.speechSynthesis.speak(speech);
+    lastInputWasVoice = false;
+  }
+}
+
+async function talk(){
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  addMessage('You', msg, '#66b3ff');
+  input.value = '';
+
+  try{
+    document.getElementById('charStatus').innerText = "Typing...";
+    const res = await fetch('/api', {
+      method: 'POST',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({
+        msg,
+        history,
+        name: aiName,
+        profile: getCharacterProfile()
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.reply || data.error || 'Error';
+
+    if (reply.includes("No tokens left")) {
+      addMessage(aiName, reply, '#ff4fa3');
+      document.getElementById('lockOverlay').style.display = "flex";
+      document.getElementById('charStatus').innerText = "Online";
+      return;
+    }
+
+    addMessage(aiName, reply, '#ff4fa3');
+    document.getElementById('charStatus').innerText = "Online";
+
+    history.push({ role:'user', parts:[{ text: msg }] });
+    history.push({ role:'model', parts:[{ text: reply }] });
+  }catch(e){
+    document.getElementById('charStatus').innerText = "Online";
+    addMessage(aiName, 'Error', '#ff4fa3');
+  }
+}
+
+function startVoice(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert('Voice recognition is not supported on this browser');
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.continuous = false;
+
+  voiceBtn.innerHTML = "🎙️";
+
+  recognition.onresult = function(event){
+    const text = event.results[0][0].transcript;
+    input.value = text;
+    lastInputWasVoice = true;
+    talk();
+  };
+
+  recognition.onend = function(){
+    voiceBtn.innerHTML = "🎤";
+  };
+
+  recognition.onerror = function(){
+    voiceBtn.innerHTML = "🎤";
+  };
+
+  recognition.start();
+}
+
+input.addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    lastInputWasVoice = false;
+    talk();
+  }
+});
+</script>
+  <div id="tokenModal" style="
+display:none;
+position:fixed;
+inset:0;
+z-index:20;
+background:rgba(0,0,0,0.6);
+align-items:center;
+justify-content:center;
+padding:20px;
+">
+  <div style="
+  width:100%;
+  max-width:320px;
+  background:#1a1a1a;
+  border:1px solid #2b2b2b;
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.45);
+  ">
+    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">
+      Not enough tokens
+    </div>
+    <div style="font-size:13px;opacity:0.82;line-height:1.5;margin-bottom:16px;">
+      You need 10 tokens to unlock this image.
+    </div>
+
+    <button id="getTokensBtn" class="btn" style="margin-bottom:10px;">
+      Get Tokens
+    </button>
+
+    <button id="subscribeBtn" class="btn" style="
+    background:#2a2a2a;
+    border:1px solid #3a3a3a;
+    ">
+      Subscribe
+    </button>
+
+    <div id="closeTokenModal" style="
+    margin-top:14px;
+    font-size:12px;
+    opacity:0.7;
+    cursor:pointer;
+    ">
+      Close
+    </div>
+  </div>
+</div>
+</body>
+</html>

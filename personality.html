@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Personality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps"><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span></div>
+</div>
+<h2 class="title">Personality</h2>
+<div class="square-grid">
+  <div class="square-card" data-value="soft" onclick="selectPersonality('soft', this)"><div class="square-image"><img src="images/personality1.png" alt="Soft"></div><div class="square-label">Soft</div></div>
+  <div class="square-card" data-value="wild" onclick="selectPersonality('wild', this)"><div class="square-image"><img src="images/personality2.png" alt="Wild"></div><div class="square-label">Wild</div></div>
+  <div class="square-card" data-value="caring" onclick="selectPersonality('caring', this)"><div class="square-image"><img src="images/personality3.png" alt="Caring"></div><div class="square-label">Caring</div></div>
+  <div class="square-card" data-value="dominant" onclick="selectPersonality('dominant', this)"><div class="square-image"><img src="images/personality4.png" alt="Dominant"></div><div class="square-label">Dominant</div></div>
+</div>
+<script>
+function selectPersonality(value, el){
+  localStorage.setItem('personality', value);
+  document.querySelectorAll('.square-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'result.html';
+}
+function goBack(){ history.back(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('personality');
+  if(!saved) return;
+  document.querySelectorAll('.square-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

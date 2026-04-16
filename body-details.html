@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Body Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="logo">AI Club</div>
+<div class="top-row">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="steps"><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+</div>
+<h2 class="title">Body Details</h2>
+<p class="subtitle">Is there a certain breast size you find especially attractive?</p>
+<div class="square-grid">
+  <div class="square-card" data-value="small" onclick="selectDetail('small', this)"><div class="square-image"><img src="images/body-details1.png" alt="Small"></div><div class="square-label">Small</div></div>
+  <div class="square-card" data-value="medium" onclick="selectDetail('medium', this)"><div class="square-image"><img src="images/body-details2.png" alt="Medium"></div><div class="square-label">Medium</div></div>
+  <div class="square-card" data-value="large" onclick="selectDetail('large', this)"><div class="square-image"><img src="images/body-details3.png" alt="Large"></div><div class="square-label">Large</div></div>
+  <div class="square-card" data-value="very-large" onclick="selectDetail('very-large', this)"><div class="square-image"><img src="images/body-details4.png" alt="Very Large"></div><div class="square-label">Very Large</div></div>
+</div>
+<script>
+function selectDetail(value, el){
+  localStorage.setItem('bodyDetails', value);
+  document.querySelectorAll('.square-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  window.location.href = 'hair.html';
+}
+function goBack(){ history.back(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('bodyDetails');
+  if(!saved) return;
+  document.querySelectorAll('.square-card').forEach(card => {
+    if(card.dataset.value === saved) card.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>

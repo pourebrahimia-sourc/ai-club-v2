@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create AI Girlfriend</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:#111;
+      color:#fff;
+      font-family:sans-serif;
+    }
+
+    .create-container{
+      max-width:380px;
+      margin:40px auto;
+      padding:0 16px;
+      text-align:center;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .video-wrapper{
+      position:relative;
+      width:100%;
+      margin:0 0 16px 0;
+    }
+
+    .create-video{
+      width:100%;
+      display:block;
+      border-radius:16px;
+    }
+
+    .create-title{
+      margin:0 0 10px 0;
+      font-size:22px;
+    }
+
+    .create-subtitle{
+      margin:0 0 16px 0;
+      color:rgba(255,255,255,0.7);
+      font-size:15px;
+    }
+
+    .desktop-btn{
+      width:100%;
+      padding:14px 20px;
+      border-radius:14px;
+      border:none;
+      background:#ff4fa3;
+      color:#fff;
+      font-size:16px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .desktop-hook{
+      margin-top:10px;
+      font-size:13px;
+      color:rgba(255,255,255,0.72);
+    }
+
+    .overlay-top,
+    .overlay-btn,
+    .overlay-hook{
+      display:none;
+    }
+
+    @media (max-width: 640px){
+      body{
+        overflow:hidden;
+      }
+
+      .create-container{
+        max-width:none;
+        width:100%;
+        height:100svh;
+        margin:0;
+        padding:14px 14px 0 14px;
+        position:relative;
+      }
+
+      .header{
+        position:absolute;
+        top:14px;
+        left:14px;
+        right:14px;
+        z-index:5;
+        margin-bottom:0;
+      }
+
+      .create-title,
+      .create-subtitle,
+      .desktop-btn,
+      .desktop-hook{
+        display:none;
+      }
+
+      .video-wrapper{
+        width:100%;
+        height:100svh;
+        margin:0;
+      }
+
+      .create-video{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        border-radius:18px;
+      }
+
+      .overlay-top{
+        display:block;
+        position:absolute;
+        left:16px;
+        right:16px;
+        bottom:118px;
+        text-align:center;
+        z-index:3;
+      }
+
+      .overlay-top h2{
+        margin:0 0 8px 0;
+        font-size:24px;
+        line-height:1.25;
+        color:#fff;
+        text-shadow:0 3px 14px rgba(0,0,0,0.45);
+      }
+
+      .overlay-top p{
+        margin:0;
+        font-size:14px;
+        line-height:1.4;
+        color:rgba(255,255,255,0.9);
+        text-shadow:0 3px 14px rgba(0,0,0,0.45);
+      }
+
+      .overlay-btn{
+        display:block;
+        position:absolute;
+        left:16px;
+        right:16px;
+        bottom:46px;
+        width:auto;
+        padding:14px 20px;
+        border-radius:14px;
+        border:none;
+        background:#ff4fa3;
+        color:#fff;
+        font-size:16px;
+        font-weight:700;
+        cursor:pointer;
+        z-index:3;
+        margin:0;
+      }
+
+      .overlay-hook{
+        display:block;
+        position:absolute;
+        left:16px;
+        right:16px;
+        bottom:18px;
+        text-align:center;
+        z-index:3;
+        font-size:13px;
+        color:rgba(255,255,255,0.9);
+        text-shadow:0 3px 14px rgba(0,0,0,0.45);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="create-container">
+
+  <div class="header" style="
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  ">
+
+    <div style="font-weight:700;font-size:18px;">
+      AI Club
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+
+      <button onclick="goSubscribe()" style="
+        padding:6px 12px;
+        border-radius:10px;
+        border:none;
+        background:#ff4fa3;
+        color:#fff;
+        font-size:12px;
+        cursor:pointer;
+      ">
+        Subscribe
+      </button>
+
+      <div onclick="goGift()" style="
+        font-size:18px;
+        cursor:pointer;
+      ">
+        🎁
+      </div>
+
+      <div onclick="goProfile()" style="
+        width:34px;
+        height:34px;
+        border-radius:50%;
+        background:#2a2a2a;
+        border:1px solid #3a3a3a;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        overflow:hidden;
+      ">
+        <span style="font-size:14px;">👤</span>
+      </div>
+
+    </div>
+  </div>
+
+  <h2 class="create-title">Create your AI Girlfriend ✨</h2>
+  <p class="create-subtitle">Build your perfect AI companion</p>
+
+  <div class="video-wrapper">
+    <video autoplay muted loop playsinline class="create-video">
+      <source src="video.mp4" type="video/mp4">
+    </video>
+
+    <div class="overlay-top">
+      <h2>Create your AI Girlfriend ✨</h2>
+      <p>Build your perfect AI companion</p>
+    </div>
+
+    <button class="overlay-btn" onclick="start()">
+      Create 💖
+    </button>
+
+    <div class="overlay-hook">Create your character for free</div>
+  </div>
+
+  <button class="desktop-btn" onclick="start()">
+    Create 💖
+  </button>
+
+  <div class="desktop-hook">Create your character for free</div>
+
+</div>
+
+<script>
+let isLoggedIn = false;
+
+async function checkSession(){
+  const token = localStorage.getItem('accessToken');
+
+  if(!token){
+    isLoggedIn = false;
+    return;
+  }
+
+  try{
+    const res = await fetch('/api/session', {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    });
+
+    const data = await res.json();
+    isLoggedIn = !!data?.data?.session;
+  } catch(e){
+    isLoggedIn = false;
+  }
+}
+
+function start(){
+  localStorage.setItem('funnelFrom', 'index');
+  window.location.href = "age.html";
+}
+
+function goProfile(){
+  if(isLoggedIn){
+    window.location.href = 'profile.html';
+  } else {
+    localStorage.setItem('loginReturnTo', 'index.html');
+    window.location.href = 'login.html';
+  }
+}
+
+function goGift(){
+  if(isLoggedIn){
+    window.location.href = 'gift.html';
+  } else {
+    localStorage.setItem('loginReturnTo', 'index.html');
+    window.location.href = 'login.html';
+  }
+}
+
+function goSubscribe(){
+  if(isLoggedIn){
+    window.location.href = 'subscribe.html';
+  } else {
+    localStorage.setItem('loginReturnTo', 'index.html');
+    window.location.href = 'login.html';
+  }
+}
+
+checkSession();
+</script>
+
+</body>
+</html>
