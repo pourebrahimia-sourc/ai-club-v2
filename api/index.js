@@ -1,5 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
-
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
@@ -119,7 +122,19 @@ high detail skin, ultra realistic, sharp focus, professional photography, 85mm l
         .getPublicUrl(fileName);
 
       const imageUrl = publicUrlData.publicUrl;
-
+await supabaseAdmin.from('characters').insert([
+  {
+    user_id: USER_ID,
+    image_url: imageUrl,
+    age: savedProfile.age || null,
+    ethnicity: savedProfile.ethnicity || null,
+    body: savedProfile.body || null,
+    body_details: savedProfile.bodyDetails || null,
+    hair: savedProfile.hair || null,
+    appearance_details: savedProfile.appearanceDetails || null,
+    personality: savedProfile.personality || null
+  }
+]);
       return res.status(200).json({ imageUrl, balance: updatedImageBalance });
     }
 
