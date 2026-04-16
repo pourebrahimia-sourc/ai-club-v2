@@ -449,6 +449,12 @@ async function syncSessionFromUrl() {
     if (user) {
       saveUserSession(user, accessToken, refreshToken);
       history.replaceState({}, document.title, window.location.pathname);
+      const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+localStorage.removeItem('loginReturnTo');
+
+if (window.location.pathname !== '/' + returnTo) {
+  window.location.href = returnTo;
+}
     }
   } catch (e) {}
 }
