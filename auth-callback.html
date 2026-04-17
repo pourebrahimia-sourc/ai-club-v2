@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signing in...</title>
+</head>
+<body style="margin:0;background:#111;color:#fff;font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;">
+  <div>Signing in...</div>
+
+  <script>
+    async function run() {
+      const hash = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = hash.get('access_token') || '';
+      const refreshToken = hash.get('refresh_token') || '';
+
+      if (!accessToken) {
+        window.location.replace('login.html');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/session', {
+          headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+        });
+
+        const json = await res.json();
+        const user = json?.data?.session?.user;
+
+        if (!user) {
+          window.location.replace('login.html');
+          return;
+        }
+
+        localStorage.setItem('accessToken', accessToken);
+        if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+        if (user.id) localStorage.setItem('userId', user.id);
+        localStorage.setItem('userEmail', user.email || '');
+        localStorage.setItem('userName', user?.user_metadata?.name || 'User');
+
+        const returnTo = localStorage.getItem('loginReturnTo') === 'result.html'
+          ? 'result.html'
+          : 'index.html';
+
+        localStorage.removeItem('loginReturnTo');
+        window.location.replace(returnTo);
+      } catch (e) {
+        window.location.replace('login.html');
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>
