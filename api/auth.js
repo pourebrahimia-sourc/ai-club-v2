@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { type, email, password, name, profile } = req.body || {};
+  const { type, email, password, name } = req.body || {};
 
   if ((type === 'signup' || type === 'login') && (!email || !password)) {
     return res.status(400).json({ error: 'Missing email or password' });
@@ -65,20 +65,7 @@ export default async function handler(req, res) {
         }
       ]);
     }
-if (data.session && profile && data.user?.id) {
-  await supabaseAdmin
-    .from('user_profiles')
-    .upsert({
-      user_id: data.user.id,
-      age: profile.age || null,
-      ethnicity: profile.ethnicity || null,
-      body: profile.body || null,
-      body_details: profile.bodyDetails || null,
-      hair: profile.hair || null,
-      appearance_details: profile.appearanceDetails || null,
-      personality: profile.personality || null
-    });
-}
+
     return res.json({
       user: data.user,
       session: data.session || null
@@ -91,22 +78,8 @@ if (data.session && profile && data.user?.id) {
       password
     });
 
-if (error) return res.status(400).json({ error: error.message });
+    if (error) return res.status(400).json({ error: error.message });
 
-if (data.session && profile && data.user?.id) {
-  await supabaseAdmin
-    .from('user_profiles')
-    .upsert({
-      user_id: data.user.id,
-      age: profile.age || null,
-      ethnicity: profile.ethnicity || null,
-      body: profile.body || null,
-      body_details: profile.bodyDetails || null,
-      hair: profile.hair || null,
-      appearance_details: profile.appearanceDetails || null,
-      personality: profile.personality || null
-    });
-}
     return res.json({
       user: data.user,
       session: data.session || null
