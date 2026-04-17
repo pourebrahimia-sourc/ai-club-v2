@@ -190,7 +190,7 @@ export default async function handler(req, res) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${origin}/result.html`
+        redirectTo: `${origin}/auth-callback.html`
       }
     });
 
