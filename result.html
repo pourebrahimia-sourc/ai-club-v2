@@ -457,11 +457,12 @@ async function syncSessionFromUrl() {
     if (user) {
       saveUserSession(user, accessToken, refreshToken);
 
-      const returnTo = getSafeReturnToFromUrl();
-      if (returnTo === 'index.html') {
-        window.location.replace('index.html');
-        return true;
-      }
+const returnTo = getSafeReturnToFromUrl();
+
+if (returnTo && returnTo !== 'result.html') {
+  window.location.replace(returnTo);
+  return true;
+}
 
       clearUrlParamsAndHash();
       return true;
