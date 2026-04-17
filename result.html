@@ -245,7 +245,6 @@ position:relative;
   </button>
 </div>
 
-<!-- Token Modal -->
 <div id="tokenModal" style="
 display:none;
 position:fixed;
@@ -295,7 +294,6 @@ padding:20px;
   </div>
 </div>
 
-<!-- Info Modal -->
 <div id="infoModal" style="
 display:none;
 position:fixed;
@@ -390,6 +388,16 @@ function authHeaders(extra = {}) {
   return token ? { ...extra, Authorization: 'Bearer ' + token } : extra;
 }
 
+function getSafeReturnToFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const value = params.get('returnTo');
+  return value === 'index.html' || value === 'result.html' ? value : '';
+}
+
+function clearUrlParamsAndHash() {
+  history.replaceState({}, document.title, window.location.pathname);
+}
+
 function clearCharacterState(){
   [
     'age',
@@ -434,7 +442,7 @@ function readAuthFromUrl() {
 
 async function syncSessionFromUrl() {
   const { accessToken, refreshToken } = readAuthFromUrl();
-  if (!accessToken) return;
+  if (!accessToken) return false;
 
   try {
     const res = await fetch('/api/session', {
@@ -448,9 +456,19 @@ async function syncSessionFromUrl() {
 
     if (user) {
       saveUserSession(user, accessToken, refreshToken);
-      history.replaceState({}, document.title, window.location.pathname);
+
+      const returnTo = getSafeReturnToFromUrl();
+      if (returnTo === 'index.html') {
+        window.location.replace('index.html');
+        return true;
+      }
+
+      clearUrlParamsAndHash();
+      return true;
     }
   } catch (e) {}
+
+  return false;
 }
 
 async function syncStoredSession(){
@@ -548,13 +566,15 @@ function startVideoChat() {
 const img = document.getElementById('aiImage');
 const pageLoadingOverlay = document.getElementById('pageLoadingOverlay');
 const imageLock = document.getElementById('imageLock');
-  function showPageLoading(){
+
+function showPageLoading(){
   pageLoadingOverlay.style.display = 'flex';
 }
 
 function hidePageLoading(){
   pageLoadingOverlay.style.display = 'none';
 }
+
 const tokenEl = document.getElementById('tokenBalance');
 const tokenModal = document.getElementById('tokenModal');
 const closeTokenModal = document.getElementById('closeTokenModal');
@@ -569,6 +589,7 @@ const infoModalTitle = document.getElementById('infoModalTitle');
 const infoModalText = document.getElementById('infoModalText');
 const infoModalOkBtn = document.getElementById('infoModalOkBtn');
 const infoModalCloseBtn = document.getElementById('infoModalCloseBtn');
+
 function openTokenModal() {
   tokenModal.style.display = 'flex';
 }
@@ -666,8 +687,8 @@ async function generateImage() {
     return;
   }
 
-showPageLoading();
-imageLock.style.pointerEvents = 'none';
+  showPageLoading();
+  imageLock.style.pointerEvents = 'none';
 
   try {
     const profile = getProfile();
@@ -787,6 +808,7 @@ function goSubscribe() {
 
   window.location.href = 'subscribe.html';
 }
+
 async function saveProfileToDatabase() {
   const token = getAccessToken();
   if (!token) return;
@@ -815,8 +837,11 @@ async function saveProfileToDatabase() {
     });
   } catch (e) {}
 }
+
 async function initResultPage() {
-  await syncSessionFromUrl();
+  const redirectedByOauth = await syncSessionFromUrl();
+  if (redirectedByOauth) return;
+
   await syncStoredSession();
   applyProfileToSummary();
   await saveProfileToDatabase();
@@ -850,7 +875,9 @@ infoModalOkBtn.addEventListener('click', () => {
   closeInfoModal();
   if (action) action();
 });
+
 infoModalCloseBtn.addEventListener('click', closeInfoModal);
+
 infoModal.addEventListener('click', (e) => {
   if (e.target === infoModal) closeInfoModal();
 });
