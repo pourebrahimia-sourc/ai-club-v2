@@ -10,12 +10,22 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+function getSafeReturnTo(value) {
+  return value === 'index.html' || value === 'result.html' ? value : 'index.html';
+}
+
+function getSiteOrigin(req) {
+  const proto = req.headers['x-forwarded-proto'] || 'https';
+  const host = req.headers.host;
+  return `${proto}://${host}`;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { type, email, password, name } = req.body || {};
+  const { type, email, password, name, returnTo } = req.body || {};
 
   if ((type === 'signup' || type === 'login') && (!email || !password)) {
     return res.status(400).json({ error: 'Missing email or password' });
@@ -177,10 +187,13 @@ export default async function handler(req, res) {
   }
 
   if (type === 'google') {
+    const safeReturnTo = getSafeReturnTo(returnTo);
+    const origin = getSiteOrigin(req);
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'https://ai-club-one-iota.vercel.app/result.html'
+        redirectTo: `${origin}/result.html?returnTo=${encodeURIComponent(safeReturnTo)}`
       }
     });
 
