@@ -457,9 +457,10 @@ async function syncSessionFromUrl() {
     if (user) {
       saveUserSession(user, accessToken, refreshToken);
 
-const returnTo = getSafeReturnToFromUrl();
+const returnTo = localStorage.getItem('loginReturnTo');
 
 if (returnTo && returnTo !== 'result.html') {
+  localStorage.removeItem('loginReturnTo');
   window.location.replace(returnTo);
   return true;
 }
