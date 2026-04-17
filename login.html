@@ -387,7 +387,9 @@
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        window.location.href = 'result.html';
+const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+localStorage.removeItem('loginReturnTo');
+window.location.href = returnTo;
       } catch(e){
         setStatus('Signup failed');
       }
@@ -429,7 +431,9 @@
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        window.location.href = 'result.html';
+        const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+localStorage.removeItem('loginReturnTo');
+window.location.href = returnTo;
       } catch(e){
         setStatus('Login failed');
       }
