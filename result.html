@@ -245,6 +245,7 @@ position:relative;
   </button>
 </div>
 
+<!-- Token Modal -->
 <div id="tokenModal" style="
 display:none;
 position:fixed;
@@ -294,6 +295,7 @@ padding:20px;
   </div>
 </div>
 
+<!-- Info Modal -->
 <div id="infoModal" style="
 display:none;
 position:fixed;
@@ -335,7 +337,6 @@ Close
 </div>
   </div>
 </div>
-
 <div id="pageLoadingOverlay" style="
 display:none;
 position:fixed;
@@ -358,11 +359,10 @@ cursor:wait;
   box-shadow:0 0 28px rgba(255,79,163,0.35);
   "></div>
 </div>
-
 <script>
 function formatText(text) {
   if (!text) return '-';
-  return text.replaceAll('-', ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return text.replaceAll('-', ' ').replace(/\w/g, c => c.toUpperCase());
 }
 
 function getProfile() {
@@ -462,10 +462,6 @@ async function syncGoogleSessionFromHash() {
 
     if (user) {
       saveUserSession(user, accessToken, refreshToken, session?.profileName || '');
-
-      if (session?.balance !== undefined && session?.balance !== null) {
-        localStorage.setItem('userBalance', String(session.balance));
-      }
     }
   } catch (e) {
     console.log('Session sync failed:', e);
