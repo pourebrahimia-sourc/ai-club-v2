@@ -259,17 +259,6 @@
       statusEl.innerText = text || '';
     }
 
-    function getSafeReturnTo(){
-      const value = localStorage.getItem('loginReturnTo');
-      return value === 'result.html' ? 'result.html' : 'index.html';
-    }
-
-    function redirectAfterAuth(){
-      const returnTo = getSafeReturnTo();
-      localStorage.removeItem('loginReturnTo');
-      window.location.href = returnTo;
-    }
-
     function saveAuth(data){
       if (data?.session?.access_token) {
         localStorage.setItem('accessToken', data.session.access_token);
@@ -398,7 +387,9 @@
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        redirectAfterAuth();
+        const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+        localStorage.removeItem('loginReturnTo');
+        window.location.href = returnTo;
       } catch(e){
         setStatus('Signup failed');
       }
@@ -440,7 +431,9 @@
 
         resetStateIfUserChanged(data?.user?.id);
         saveAuth(data);
-        redirectAfterAuth();
+        const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+        localStorage.removeItem('loginReturnTo');
+        window.location.href = returnTo;
       } catch(e){
         setStatus('Login failed');
       }
@@ -502,13 +495,13 @@
       }
     }
 
+    setMode('login');
+
     function closeLogin(){
-      const returnTo = getSafeReturnTo();
+      const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
       localStorage.removeItem('loginReturnTo');
       window.location.href = returnTo;
     }
-
-    setMode('login');
   </script>
 
 </body>
