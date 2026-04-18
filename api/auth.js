@@ -21,15 +21,38 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { type, email, password, name } = req.body || {};
+  const {
+    type,
+    email,
+    password,
+    name,
+    access_token,
+    refresh_token
+  } = req.body || {};
 
-  if ((type === 'signup' || type === 'login') && (!email || !password)) {
-    return res.status(400).json({ error: 'Missing email or password' });
+  if (type === 'google') {
+    const origin = getSiteOrigin(req);
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${origin}/result.html`,
+        queryParams: {
+          prompt: 'select_account'
+        }
+      }
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    return res.json({ url: data.url });
   }
 
   if (type === 'signup') {
-    if (!name || !name.trim()) {
-      return res.status(400).json({ error: 'Missing name' });
+    if (!email || !password || !name || !name.trim()) {
+      return res.status(400).json({ error: 'Missing name, email or password' });
     }
 
     const trimmedName = name.trim();
@@ -42,31 +65,41 @@ export default async function handler(req, res) {
       }
     });
 
-    if (error) return res.status(400).json({ error: error.message });
-    if (!data?.user?.id) return res.status(400).json({ error: 'Signup failed' });
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (!data?.user?.id) {
+      return res.status(400).json({ error: 'Signup failed' });
+    }
+
+    const userId = data.user.id;
 
     const { data: existingWallet } = await supabaseAdmin
       .from('wallets')
       .select('id')
-      .eq('user_id', data.user.id)
+      .eq('user_id', userId)
       .maybeSingle();
 
     if (!existingWallet) {
       await supabaseAdmin.from('wallets').insert([
-        { user_id: data.user.id, balance: 10 }
+        {
+          user_id: userId,
+          balance: 10
+        }
       ]);
     }
 
     const { data: existingUser } = await supabaseAdmin
       .from('users')
       .select('id')
-      .eq('id', data.user.id)
+      .eq('id', userId)
       .maybeSingle();
 
     if (!existingUser) {
       await supabaseAdmin.from('users').insert([
         {
-          id: data.user.id,
+          id: userId,
           name: trimmedName
         }
       ]);
@@ -79,12 +112,18 @@ export default async function handler(req, res) {
   }
 
   if (type === 'login') {
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Missing email or password' });
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password
     });
 
-    if (error) return res.status(400).json({ error: error.message });
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
 
     return res.json({
       user: data.user,
@@ -144,15 +183,15 @@ export default async function handler(req, res) {
       redirectTo: `${origin}/reset-password.html`
     });
 
-    if (error) return res.status(400).json({ error: error.message });
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
 
     return res.json({ success: true });
   }
 
   if (type === 'update-password') {
-    const { access_token, refresh_token, password: newPassword } = req.body || {};
-
-    if (!access_token || !refresh_token || !newPassword) {
+    if (!access_token || !refresh_token || !password) {
       return res.status(400).json({ error: 'Missing token or password' });
     }
 
@@ -174,7 +213,7 @@ export default async function handler(req, res) {
     }
 
     const { error } = await tempSupabase.auth.updateUser({
-      password: newPassword
+      password
     });
 
     if (error) {
@@ -182,21 +221,6 @@ export default async function handler(req, res) {
     }
 
     return res.json({ success: true });
-  }
-
-  if (type === 'google') {
-    const origin = getSiteOrigin(req);
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${origin}/result.html`
-      }
-    });
-
-    if (error) return res.status(400).json({ error: error.message });
-
-    return res.json({ url: data.url });
   }
 
   return res.status(400).json({ error: 'Invalid type' });
