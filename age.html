@@ -27,8 +27,7 @@ function selectAge(value, el){
 }
 function goBack(){
   const from = localStorage.getItem('funnelFrom');
-
-  if(from === 'result'){
+  if(from === 'result.html' || from === 'result'){
     window.location.href = 'result.html';
   } else {
     window.location.href = 'index.html';
