@@ -31,9 +31,8 @@
 
 <div id="toast"></div>
 
-<!-- هدر کامل و هماهنگ با بقیه صفحات -->
 <div class="header">
-  <div style="font-weight:700;font-size:18px; cursor:pointer;" onclick="window.location.href='result.html'">
+  <div style="font-weight:700;font-size:18px; cursor:pointer;" onclick="goBack()">
     ← AI Club
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
@@ -107,7 +106,12 @@ function showNotification(msg) {
   setTimeout(() => { toast.style.display = 'none'; }, 3000);
 }
 
-// تابع جدید برای آپدیت لحظه‌ای موجودی در هدر
+function goBack(){
+  const params = new URLSearchParams(window.location.search);
+  const from = params.get('from') || 'result.html';
+  window.location.href = from;
+}
+
 async function refreshHeaderBalance() {
   try {
     const res = await fetch('/api/wallet', { headers: authHeaders() });
@@ -144,7 +148,6 @@ async function claimGift(type, btn) {
     } else {
       btn.innerText = 'Claimed';
       showNotification('Success! Tokens added.');
-      // بلافاصله موجودی هدر را آپدیت کن
       refreshHeaderBalance();
     }
   } catch (e) { 
@@ -163,10 +166,10 @@ function copyReferral() {
   });
 }
 
-// اجرای توابع در بدو ورود به صفحه
 document.addEventListener('DOMContentLoaded', () => {
   if(!getAccessToken()){
-    localStorage.setItem('loginReturnTo', 'gift.html');
+    const currentUrl = window.location.pathname + window.location.search;
+    localStorage.setItem('loginReturnTo', currentUrl);
     window.location.href = 'login.html';
     return;
   }
