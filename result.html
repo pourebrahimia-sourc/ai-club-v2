@@ -245,7 +245,6 @@ position:relative;
   </button>
 </div>
 
-<!-- Token Modal -->
 <div id="tokenModal" style="
 display:none;
 position:fixed;
@@ -295,7 +294,6 @@ padding:20px;
   </div>
 </div>
 
-<!-- Info Modal -->
 <div id="infoModal" style="
 display:none;
 position:fixed;
@@ -362,7 +360,7 @@ cursor:wait;
 <script>
 function formatText(text) {
   if (!text) return '-';
-  return text.replaceAll('-', ' ').replace(/\w/g, c => c.toUpperCase());
+  return text.replaceAll('-', ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
 function getProfile() {
@@ -390,12 +388,11 @@ function authHeaders(extra = {}) {
   return token ? { ...extra, Authorization: 'Bearer ' + token } : extra;
 }
 
-function clearOauthUrl() {
+function clearUrlParamsAndHash() {
   history.replaceState({}, document.title, window.location.pathname);
 }
 
-function clearCharacterState(){
-  [
+function clearCharacterState(){[
     'age',
     'ethnicity',
     'body',
@@ -418,36 +415,27 @@ function resetStateIfUserChanged(nextUserId){
   }
 }
 
-function saveUserSession(user, accessToken, refreshToken, profileName = '') {
+function saveUserSession(user, accessToken, refreshToken) {
   resetStateIfUserChanged(user?.id || '');
 
   if (accessToken) localStorage.setItem('accessToken', accessToken);
   if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
   if (user?.id) localStorage.setItem('userId', user.id);
   localStorage.setItem('userEmail', user?.email || '');
-  localStorage.setItem('userName', profileName || user?.user_metadata?.name || 'User');
+  localStorage.setItem('userName', user?.user_metadata?.name || 'User');
 }
 
-async function syncGoogleSessionFromHash() {
-  const hash = window.location.hash || '';
+function readAuthFromUrl() {
+  const hash = new URLSearchParams(window.location.hash.substring(1));
+  const search = new URLSearchParams(window.location.search);
+  const accessToken = hash.get('access_token') || search.get('access_token') || '';
+  const refreshToken = hash.get('refresh_token') || search.get('refresh_token') || '';
+  return { accessToken, refreshToken };
+}
 
-  if (!hash.includes('access_token')) {
-    return false;
-  }
-
-  const params = new URLSearchParams(hash.substring(1));
-  const accessToken = params.get('access_token');
-  const refreshToken = params.get('refresh_token');
-
-  if (!accessToken) {
-    clearOauthUrl();
-    return false;
-  }
-
-  localStorage.setItem('accessToken', accessToken);
-  if (refreshToken) {
-    localStorage.setItem('refreshToken', refreshToken);
-  }
+async function syncSessionFromUrl() {
+  const { accessToken, refreshToken } = readAuthFromUrl();
+  if (!accessToken) return false;
 
   try {
     const res = await fetch('/api/session', {
@@ -457,24 +445,24 @@ async function syncGoogleSessionFromHash() {
     });
 
     const json = await res.json();
-    const session = json?.data?.session;
-    const user = session?.user;
+    const user = json.data?.session?.user;
 
     if (user) {
-      saveUserSession(user, accessToken, refreshToken, session?.profileName || '');
+      saveUserSession(user, accessToken, refreshToken);
+
+      const returnTo = localStorage.getItem('loginReturnTo');
+      if (returnTo) {
+        localStorage.removeItem('loginReturnTo');
+        if (returnTo !== 'result.html') {
+          window.location.replace(returnTo);
+          return true;
+        }
+      }
+
+      clearUrlParamsAndHash();
+      return true;
     }
-  } catch (e) {
-    console.log('Session sync failed:', e);
-  }
-
-  const returnTo = localStorage.getItem('loginReturnTo');
-  clearOauthUrl();
-
-  if (returnTo === 'index.html') {
-    localStorage.removeItem('loginReturnTo');
-    window.location.href = 'index.html';
-    return true;
-  }
+  } catch (e) {}
 
   return false;
 }
@@ -491,12 +479,7 @@ async function syncStoredSession(){
     const session = json?.data?.session;
 
     if (session?.user) {
-      saveUserSession(
-        session.user,
-        token,
-        localStorage.getItem('refreshToken') || '',
-        session?.profileName || ''
-      );
+      saveUserSession(session.user, token, localStorage.getItem('refreshToken') || '');
     }
   } catch (e) {}
 }
@@ -852,8 +835,8 @@ async function saveProfileToDatabase() {
 }
 
 async function initResultPage() {
-  const redirectedAway = await syncGoogleSessionFromHash();
-  if (redirectedAway) return;
+  const redirectedByOauth = await syncSessionFromUrl();
+  if (redirectedByOauth) return;
 
   await syncStoredSession();
   applyProfileToSummary();
