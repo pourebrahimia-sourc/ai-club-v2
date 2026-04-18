@@ -67,7 +67,7 @@
 <body>
 
 <div class="header">
-  <div class="back" onclick="window.location.href='result.html'">← Back</div>
+  <div class="back" onclick="goBack()">← Back</div>
   <div>💎 Subscribe</div>
   <div></div>
 </div>
@@ -107,6 +107,26 @@
   </div>
   <button class="buy-btn">Go VIP</button>
 </div>
+
+<script>
+function goBack(){
+  const params = new URLSearchParams(window.location.search);
+  const from = params.get('from') || 'result.html';
+  window.location.href = from;
+}
+
+function getAccessToken(){
+  return localStorage.getItem('accessToken') || '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if(!getAccessToken()){
+    const currentUrl = window.location.pathname + window.location.search;
+    localStorage.setItem('loginReturnTo', currentUrl);
+    window.location.href = 'login.html';
+  }
+});
+</script>
 
 </body>
 </html>
