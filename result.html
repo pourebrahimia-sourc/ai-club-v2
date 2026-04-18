@@ -245,118 +245,29 @@ position:relative;
   </button>
 </div>
 
-<div id="tokenModal" style="
-display:none;
-position:fixed;
-inset:0;
-z-index:20;
-background:rgba(0,0,0,0.6);
-align-items:center;
-justify-content:center;
-padding:20px;
-">
-  <div style="
-    width:100%;
-    max-width:320px;
-    background:#1a1a1a;
-    border:1px solid #2b2b2b;
-    border-radius:18px;
-    padding:18px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,0.45);
-  ">
-    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">
-      Not enough tokens
-    </div>
-    <div id="tokenModalText" style="font-size:13px;opacity:0.82;line-height:1.5;margin-bottom:16px;">
-      You need 10 tokens to unlock this image.
-    </div>
-
-    <button id="getTokensBtn" class="btn" style="margin-bottom:10px;">
-      Get Tokens
-    </button>
-
-    <button id="subscribeBtn" class="btn" style="
-      background:#2a2a2a;
-      border:1px solid #3a3a3a;
-    ">
-      Subscribe
-    </button>
-
-    <div id="closeTokenModal" style="
-      margin-top:14px;
-      font-size:12px;
-      opacity:0.7;
-      cursor:pointer;
-    ">
-      Close
-    </div>
+<div id="tokenModal" style="display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:20px;">
+  <div style="width:100%;max-width:320px;background:#1a1a1a;border:1px solid #2b2b2b;border-radius:18px;padding:18px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.45);">
+    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Not enough tokens</div>
+    <div id="tokenModalText" style="font-size:13px;opacity:0.82;line-height:1.5;margin-bottom:16px;">You need 10 tokens to unlock this image.</div>
+    <button id="getTokensBtn" class="btn" style="margin-bottom:10px;">Get Tokens</button>
+    <button id="subscribeBtn" class="btn" style="background:#2a2a2a;border:1px solid #3a3a3a;">Subscribe</button>
+    <div id="closeTokenModal" style="margin-top:14px;font-size:12px;opacity:0.7;cursor:pointer;">Close</div>
   </div>
 </div>
 
-<div id="infoModal" style="
-display:none;
-position:fixed;
-inset:0;
-z-index:21;
-background:rgba(0,0,0,0.6);
-align-items:center;
-justify-content:center;
-padding:20px;
-">
-  <div style="
-    width:100%;
-    max-width:320px;
-    background:#1a1a1a;
-    border:1px solid #2b2b2b;
-    border-radius:18px;
-    padding:18px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,0.45);
-  ">
-    <div id="infoModalTitle" style="font-size:18px;font-weight:700;margin-bottom:8px;">
-      Info
-    </div>
-
-    <div id="infoModalText" style="font-size:13px;opacity:0.82;line-height:1.5;margin-bottom:16px;">
-      Message
-    </div>
-
-    <button id="infoModalOkBtn" class="btn">
-      OK
-    </button>
-    <div id="infoModalCloseBtn" style="
-margin-top:10px;
-font-size:12px;
-opacity:0.7;
-cursor:pointer;
-">
-Close
-</div>
+<div id="infoModal" style="display:none;position:fixed;inset:0;z-index:21;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:20px;">
+  <div style="width:100%;max-width:320px;background:#1a1a1a;border:1px solid #2b2b2b;border-radius:18px;padding:18px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.45);">
+    <div id="infoModalTitle" style="font-size:18px;font-weight:700;margin-bottom:8px;">Info</div>
+    <div id="infoModalText" style="font-size:13px;opacity:0.82;line-height:1.5;margin-bottom:16px;">Message</div>
+    <button id="infoModalOkBtn" class="btn">OK</button>
+    <div id="infoModalCloseBtn" style="margin-top:10px;font-size:12px;opacity:0.7;cursor:pointer;">Close</div>
   </div>
 </div>
-<div id="pageLoadingOverlay" style="
-display:none;
-position:fixed;
-inset:0;
-z-index:9999;
-background:rgba(0,0,0,0.55);
-backdrop-filter:blur(4px);
--webkit-backdrop-filter:blur(4px);
-align-items:center;
-justify-content:center;
-cursor:wait;
-">
-  <div style="
-  width:72px;
-  height:72px;
-  border-radius:50%;
-  border:4px solid rgba(255,255,255,0.18);
-  border-top:4px solid #ff4fa3;
-  animation:spin 0.9s linear infinite;
-  box-shadow:0 0 28px rgba(255,79,163,0.35);
-  "></div>
+
+<div id="pageLoadingOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center;cursor:wait;">
+  <div style="width:72px;height:72px;border-radius:50%;border:4px solid rgba(255,255,255,0.18);border-top:4px solid #ff4fa3;animation:spin 0.9s linear infinite;box-shadow:0 0 28px rgba(255,79,163,0.35);"></div>
 </div>
+
 <script>
 function formatText(text) {
   if (!text) return '-';
@@ -392,20 +303,7 @@ function clearUrlParamsAndHash() {
   history.replaceState({}, document.title, window.location.pathname);
 }
 
-function clearCharacterState(){[
-    'age',
-    'ethnicity',
-    'body',
-    'bodyDetails',
-    'hair',
-    'appearanceDetails',
-    'personality',
-    'aiImage',
-    'imageUnlocked',
-    'lastProfileKey',
-    'aiName',
-    'recentChats'
-  ].forEach(key => localStorage.removeItem(key));
+function clearCharacterState(){['age','ethnicity','body','bodyDetails','hair','appearanceDetails','personality','aiImage','imageUnlocked','lastProfileKey','aiName','recentChats'].forEach(key => localStorage.removeItem(key));
 }
 
 function resetStateIfUserChanged(nextUserId){
@@ -417,7 +315,6 @@ function resetStateIfUserChanged(nextUserId){
 
 function saveUserSession(user, accessToken, refreshToken) {
   resetStateIfUserChanged(user?.id || '');
-
   if (accessToken) localStorage.setItem('accessToken', accessToken);
   if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
   if (user?.id) localStorage.setItem('userId', user.id);
@@ -438,27 +335,20 @@ async function syncSessionFromUrl() {
   if (!accessToken) return false;
 
   try {
-    const res = await fetch('/api/session', {
-      headers: {
-        Authorization: 'Bearer ' + accessToken
-      }
-    });
-
+    const res = await fetch('/api/session', { headers: { Authorization: 'Bearer ' + accessToken } });
     const json = await res.json();
     const user = json.data?.session?.user;
 
     if (user) {
       saveUserSession(user, accessToken, refreshToken);
-
       const returnTo = localStorage.getItem('loginReturnTo');
       if (returnTo) {
         localStorage.removeItem('loginReturnTo');
-        if (returnTo !== 'result.html') {
+        if (returnTo !== 'result.html' && returnTo !== '') {
           window.location.replace(returnTo);
           return true;
         }
       }
-
       clearUrlParamsAndHash();
       return true;
     }
@@ -470,14 +360,10 @@ async function syncSessionFromUrl() {
 async function syncStoredSession(){
   const token = getAccessToken();
   if (!token) return;
-
   try {
-    const res = await fetch('/api/session', {
-      headers: authHeaders()
-    });
+    const res = await fetch('/api/session', { headers: authHeaders() });
     const json = await res.json();
     const session = json?.data?.session;
-
     if (session?.user) {
       saveUserSession(session.user, token, localStorage.getItem('refreshToken') || '');
     }
@@ -487,11 +373,8 @@ async function syncStoredSession(){
 async function getUserBalance() {
   const token = getAccessToken();
   if (!token) return null;
-
   try {
-    const res = await fetch('/api/wallet', {
-      headers: authHeaders()
-    });
+    const res = await fetch('/api/wallet', { headers: authHeaders() });
     const data = await res.json();
     return Number(data.balance || 0);
   } catch (e) {
@@ -506,55 +389,26 @@ function goLoginFromResult() {
 
 async function startChat() {
   const token = getAccessToken();
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
+  if (!token) { goLoginFromResult(); return; }
   const balance = await getUserBalance();
-  if (balance < 5) {
-    openTokenModalWithAmount(5);
-    return;
-  }
-
+  if (balance < 5) { openTokenModalWithAmount(5); return; }
   window.location.href = 'chat.html';
 }
 
 function generateVoice() {
   const token = getAccessToken();
-
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
+  if (!token) { goLoginFromResult(); return; }
   getUserBalance().then(balance => {
-    if (balance < 5) {
-      openTokenModalWithAmount(5);
-      return;
-    }
-
-    openInfoModal(
-      'Voice Chat',
-      'You can chat with her by voice. Custom voice generation coming soon.'
-    );
+    if (balance < 5) { openTokenModalWithAmount(5); return; }
+    openInfoModal('Voice Chat', 'You can chat with her by voice. Custom voice generation coming soon.');
   });
 }
 
 function startVideoChat() {
   const token = getAccessToken();
-
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
+  if (!token) { goLoginFromResult(); return; }
   getUserBalance().then(balance => {
-    if (balance < 20) {
-      openTokenModalWithAmount(20);
-      return;
-    }
-
+    if (balance < 20) { openTokenModalWithAmount(20); return; }
     openInfoModal('Video Chat', 'Coming soon.');
   });
 }
@@ -563,13 +417,8 @@ const img = document.getElementById('aiImage');
 const pageLoadingOverlay = document.getElementById('pageLoadingOverlay');
 const imageLock = document.getElementById('imageLock');
 
-function showPageLoading(){
-  pageLoadingOverlay.style.display = 'flex';
-}
-
-function hidePageLoading(){
-  pageLoadingOverlay.style.display = 'none';
-}
+function showPageLoading(){ pageLoadingOverlay.style.display = 'flex'; }
+function hidePageLoading(){ pageLoadingOverlay.style.display = 'none'; }
 
 const tokenEl = document.getElementById('tokenBalance');
 const tokenModal = document.getElementById('tokenModal');
@@ -579,64 +428,36 @@ const subscribeBtn = document.getElementById('subscribeBtn');
 const editBtn = document.getElementById('editBtn');
 const regenerateBtn = document.getElementById('regenerateBtn');
 const tokenModalText = document.getElementById('tokenModalText');
-
 const infoModal = document.getElementById('infoModal');
 const infoModalTitle = document.getElementById('infoModalTitle');
 const infoModalText = document.getElementById('infoModalText');
 const infoModalOkBtn = document.getElementById('infoModalOkBtn');
 const infoModalCloseBtn = document.getElementById('infoModalCloseBtn');
 
-function openTokenModal() {
-  tokenModal.style.display = 'flex';
-}
-
-function openTokenModalWithAmount(amount) {
-  tokenModalText.innerText = `You need ${amount} tokens.`;
-  tokenModal.style.display = 'flex';
-}
-
-function closeModal() {
-  tokenModal.style.display = 'none';
-}
+function openTokenModal() { tokenModal.style.display = 'flex'; }
+function openTokenModalWithAmount(amount) { tokenModalText.innerText = `You need ${amount} tokens.`; tokenModal.style.display = 'flex'; }
+function closeModal() { tokenModal.style.display = 'none'; }
 
 let pendingInfoAction = null;
-
 function openInfoModal(title, text, onOk = null) {
   infoModalTitle.innerText = title;
   infoModalText.innerText = text;
   pendingInfoAction = typeof onOk === 'function' ? onOk : null;
   infoModal.style.display = 'flex';
 }
-
-function closeInfoModal() {
-  infoModal.style.display = 'none';
-  pendingInfoAction = null;
-}
+function closeInfoModal() { infoModal.style.display = 'none'; pendingInfoAction = null; }
 
 async function refreshBalance() {
   const token = getAccessToken();
-  if (!token) {
-    tokenEl.innerText = '💰 0';
-    return;
-  }
-
+  if (!token) { tokenEl.innerText = '💰 0'; return; }
   try {
-    const res = await fetch('/api/wallet', {
-      headers: authHeaders()
-    });
+    const res = await fetch('/api/wallet', { headers: authHeaders() });
     const data = await res.json();
-
     if (data.balance !== undefined) {
       tokenEl.innerText = '💰 ' + data.balance;
-      if (data.userId) {
-        localStorage.setItem('userId', data.userId);
-      }
-    } else {
-      tokenEl.innerText = '💰 0';
-    }
-  } catch (e) {
-    tokenEl.innerText = '💰 0';
-  }
+      if (data.userId) localStorage.setItem('userId', data.userId);
+    } else { tokenEl.innerText = '💰 0'; }
+  } catch (e) { tokenEl.innerText = '💰 0'; }
 }
 
 function applyProfileToSummary() {
@@ -664,7 +485,6 @@ function applyImageState() {
   } else {
     localStorage.removeItem('aiImage');
     localStorage.removeItem('imageUnlocked');
-
     img.src = 'images/locked-preview.png';
     img.style.filter = 'blur(20px)';
     img.style.opacity = '1';
@@ -672,52 +492,33 @@ function applyImageState() {
     editBtn.style.display = 'flex';
     regenerateBtn.style.display = 'none';
   }
-
   localStorage.setItem('lastProfileKey', getCurrentProfileKey());
 }
 
 async function generateImage() {
   const token = getAccessToken();
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
+  if (!token) { goLoginFromResult(); return; }
   showPageLoading();
   imageLock.style.pointerEvents = 'none';
 
   try {
     const profile = getProfile();
     const aiName = localStorage.getItem('aiName') || 'Luna';
-
     const res = await fetch('/api', {
       method: 'POST',
       headers: authHeaders({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({
-        msg: 'generate image',
-        name: aiName,
-        profile
-      })
+      body: JSON.stringify({ msg: 'generate image', name: aiName, profile })
     });
-
     const data = await res.json();
-
     if (data.error) {
       hidePageLoading();
       imageLock.style.pointerEvents = 'auto';
-
-      if (data.error === 'Not enough tokens') {
-        openTokenModalWithAmount(10);
-      } else {
-        openInfoModal('Error', 'Something went wrong. Please try again.');
-      }
-
+      if (data.error === 'Not enough tokens') { openTokenModalWithAmount(10); } 
+      else { openInfoModal('Error', 'Something went wrong. Please try again.'); }
       return;
     }
-
     if (data.imageUrl) {
       img.style.opacity = '0';
-
       img.onload = async () => {
         hidePageLoading();
         imageLock.style.pointerEvents = 'auto';
@@ -727,117 +528,65 @@ async function generateImage() {
         editBtn.style.display = 'flex';
         regenerateBtn.style.display = 'flex';
       };
-
       img.src = data.imageUrl;
-
       localStorage.setItem('aiImage', data.imageUrl);
       localStorage.setItem('imageUnlocked', 'true');
       localStorage.setItem('lastProfileKey', getCurrentProfileKey());
-
-      if (data.balance !== undefined) {
-        tokenEl.innerText = '💰 ' + data.balance;
-      } else {
-        await refreshBalance();
-      }
-
+      if (data.balance !== undefined) { tokenEl.innerText = '💰 ' + data.balance; } else { await refreshBalance(); }
       return;
     }
-
-    hidePageLoading();
-    imageLock.style.pointerEvents = 'auto';
+    hidePageLoading(); imageLock.style.pointerEvents = 'auto';
     openInfoModal('Error', 'Something went wrong. Please try again.');
   } catch (err) {
-    hidePageLoading();
-    imageLock.style.pointerEvents = 'auto';
+    hidePageLoading(); imageLock.style.pointerEvents = 'auto';
     openInfoModal('Error', 'Connection error. Please try again.');
   }
 }
 
 function editCharacter() {
   const hasImage = localStorage.getItem('imageUnlocked') === 'true';
-
   if (hasImage) {
-    openInfoModal(
-      'Change Character',
-      'If you continue, this character will not be used for chat. You can find it later in your album.',
-      () => {
-        localStorage.setItem('funnelFrom', 'result');
-        window.location.href = 'age.html';
-      }
-    );
+    openInfoModal('Change Character', 'If you continue, this character will not be used for chat. You can find it later in your album.', () => {
+      localStorage.setItem('funnelFrom', 'result.html');
+      window.location.href = 'age.html';
+    });
     return;
   }
-
-  localStorage.setItem('funnelFrom', 'result');
+  localStorage.setItem('funnelFrom', 'result.html');
   window.location.href = 'age.html';
 }
 
 function goProfile() {
   const token = getAccessToken();
-
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
-  window.location.href = 'profile.html';
+  if (!token) { localStorage.setItem('loginReturnTo', 'profile.html?from=result.html'); window.location.href = 'login.html'; return; }
+  window.location.href = 'profile.html?from=result.html';
 }
 
 function goGift() {
   const token = getAccessToken();
-
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
-  window.location.href = 'gift.html';
+  if (!token) { localStorage.setItem('loginReturnTo', 'gift.html?from=result.html'); window.location.href = 'login.html'; return; }
+  window.location.href = 'gift.html?from=result.html';
 }
 
 function goSubscribe() {
   const token = getAccessToken();
-
-  if (!token) {
-    goLoginFromResult();
-    return;
-  }
-
-  window.location.href = 'subscribe.html';
+  if (!token) { localStorage.setItem('loginReturnTo', 'subscribe.html?from=result.html'); window.location.href = 'login.html'; return; }
+  window.location.href = 'subscribe.html?from=result.html';
 }
 
 async function saveProfileToDatabase() {
   const token = getAccessToken();
   if (!token) return;
-
   const profile = getProfile();
-
-  if (
-    !profile.age &&
-    !profile.ethnicity &&
-    !profile.body &&
-    !profile.bodyDetails &&
-    !profile.hair &&
-    !profile.appearanceDetails &&
-    !profile.personality
-  ) {
-    return;
-  }
-
+  if (!profile.age && !profile.ethnicity && !profile.body && !profile.bodyDetails && !profile.hair && !profile.appearanceDetails && !profile.personality) return;
   try {
-    await fetch('/api/save-profile', {
-      method: 'POST',
-      headers: authHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify({ profile })
-    });
+    await fetch('/api/save-profile', { method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify({ profile }) });
   } catch (e) {}
 }
 
 async function initResultPage() {
   const redirectedByOauth = await syncSessionFromUrl();
   if (redirectedByOauth) return;
-
   await syncStoredSession();
   applyProfileToSummary();
   await saveProfileToDatabase();
@@ -849,34 +598,13 @@ document.addEventListener('DOMContentLoaded', initResultPage);
 window.addEventListener('pageshow', initResultPage);
 
 imageLock.addEventListener('click', generateImage);
-
 closeTokenModal.addEventListener('click', closeModal);
-
-tokenModal.addEventListener('click', (e) => {
-  if (e.target === tokenModal) closeModal();
-});
-
-getTokensBtn.addEventListener('click', () => {
-  closeModal();
-  goGift();
-});
-
-subscribeBtn.addEventListener('click', () => {
-  closeModal();
-  goSubscribe();
-});
-
-infoModalOkBtn.addEventListener('click', () => {
-  const action = pendingInfoAction;
-  closeInfoModal();
-  if (action) action();
-});
-
+tokenModal.addEventListener('click', (e) => { if (e.target === tokenModal) closeModal(); });
+getTokensBtn.addEventListener('click', () => { closeModal(); goGift(); });
+subscribeBtn.addEventListener('click', () => { closeModal(); goSubscribe(); });
+infoModalOkBtn.addEventListener('click', () => { const action = pendingInfoAction; closeInfoModal(); if (action) action(); });
 infoModalCloseBtn.addEventListener('click', closeInfoModal);
-
-infoModal.addEventListener('click', (e) => {
-  if (e.target === infoModal) closeInfoModal();
-});
+infoModal.addEventListener('click', (e) => { if (e.target === infoModal) closeInfoModal(); });
 </script>
 </body>
 </html>
