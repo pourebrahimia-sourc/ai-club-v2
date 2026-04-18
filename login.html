@@ -273,8 +273,7 @@
       localStorage.setItem('userName', data?.user?.user_metadata?.name || 'User');
     }
 
-    function clearGeneratedState(){
-      [
+    function clearGeneratedState(){[
         'age',
         'ethnicity',
         'body',
@@ -496,11 +495,11 @@
     }
 
     setMode('login');
-
+    
     function closeLogin(){
-      const returnTo = localStorage.getItem('loginReturnTo') || 'index.html';
+      const returnTo = localStorage.getItem('loginReturnTo');
       localStorage.removeItem('loginReturnTo');
-      window.location.href = returnTo;
+      window.location.href = returnTo || 'index.html';
     }
   </script>
 
