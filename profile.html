@@ -4,48 +4,259 @@
   <title>Profile - AI Club</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    body{ margin:0; background:#111; color:#fff; font-family:Arial, Helvetica, sans-serif; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
-    .card{ width:100%; max-width:420px; background:#1a1a1a; border:1px solid #2b2b2b; border-radius:18px; padding:20px; }
-    .back-btn{ margin-bottom:10px; background:none; border:none; color:#ff4fa3; font-size:14px; cursor:pointer; padding:0; outline:none; box-shadow:none; appearance:none; -webkit-appearance:none; }
-    .avatar{ width:70px; height:70px; border-radius:50%; background:#2a2a2a; margin:0 auto 15px; background-size:cover; background-position:center; }
-    .title{ text-align:center; font-size:20px; margin-bottom:20px; }
-    .row{ margin-bottom:12px; font-size:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
-    .name-wrap{ display:flex; align-items:center; gap:6px; }
-    .edit-btn{ display:inline-flex; align-items:center; justify-content:center; background:transparent; border:none; outline:none; box-shadow:none; cursor:pointer; font-size:14px; color:#ff4fa3; padding:0; margin:0; line-height:1; appearance:none; -webkit-appearance:none; }
-    .btn{ width:100%; padding:12px; border:none; border-radius:12px; margin-top:10px; cursor:pointer; font-weight:700; font-size:14px; }
-    .primary{ background:#ff4fa3; color:#fff; }
-    .dark{ background:#2a2a2a; color:#fff; border:1px solid #3a3a3a; }
-    .chat-item{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #2a2a2a; cursor:pointer; }
-    .chat-avatar{ width:40px; height:40px; border-radius:50%; background:#2a2a2a; background-size:cover; background-position:center; flex-shrink:0; }
-    .chat-name{ font-size:14px; font-weight:700; }
-    .chat-date{ font-size:11px; opacity:0.6; margin-top:2px; }
-    .empty{ opacity:0.6; font-size:13px; padding:8px 0; }
-    .modal{ display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:20px; }
-    .modal-box{ width:100%; max-width:340px; background:#1a1a1a; border:1px solid #2b2b2b; border-radius:18px; padding:18px; box-shadow:0 20px 60px rgba(0,0,0,0.45); }
-    .modal-title{ font-size:17px; font-weight:700; margin-bottom:12px; }
-    .modal-input{ width:100%; height:48px; border:none; outline:none; border-radius:12px; background:#111; border:1px solid #2b2b2b; color:#fff; padding:0 14px; font-size:14px; margin-bottom:12px; }
-    .modal-actions{ display:flex; gap:10px; }
-    .modal-btn{ flex:1; height:44px; border:none; border-radius:12px; cursor:pointer; font-weight:700; font-size:14px; }
-    .modal-cancel{ background:#2a2a2a; color:#fff; border:1px solid #3a3a3a; }
-    .modal-save{ background:#ff4fa3; color:#fff; }
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    body{
+      margin:0;
+      background:#111;
+      color:#fff;
+      font-family:Arial, Helvetica, sans-serif;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      padding:20px;
+    }
+
+    .card{
+      width:100%;
+      max-width:420px;
+      background:#1a1a1a;
+      border:1px solid #2b2b2b;
+      border-radius:18px;
+      padding:20px;
+    }
+
+    .back-btn{
+      margin-bottom:10px;
+      background:none;
+      border:none;
+      color:#ff4fa3;
+      font-size:14px;
+      cursor:pointer;
+      padding:0;
+      outline:none;
+      box-shadow:none;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+
+    .avatar{
+      width:70px;
+      height:70px;
+      border-radius:50%;
+      background:#2a2a2a;
+      margin:0 auto 15px;
+      background-size:cover;
+      background-position:center;
+    }
+
+    .title{
+      text-align:center;
+      font-size:20px;
+      margin-bottom:20px;
+    }
+
+    .row{
+      margin-bottom:12px;
+      font-size:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+
+    .name-wrap{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .edit-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:transparent;
+      border:none;
+      outline:none;
+      box-shadow:none;
+      cursor:pointer;
+      font-size:14px;
+      color:#ff4fa3;
+      padding:0;
+      margin:0;
+      line-height:1;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+
+    .btn{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      margin-top:10px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .primary{
+      background:#ff4fa3;
+      color:#fff;
+    }
+
+    .dark{
+      background:#2a2a2a;
+      color:#fff;
+      border:1px solid #3a3a3a;
+    }
+
+    .chat-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 0;
+      border-bottom:1px solid #2a2a2a;
+      cursor:pointer;
+    }
+
+    .chat-avatar{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:#2a2a2a;
+      background-size:cover;
+      background-position:center;
+      flex-shrink:0;
+    }
+
+    .chat-name{
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .chat-date{
+      font-size:11px;
+      opacity:0.6;
+      margin-top:2px;
+    }
+
+    .empty{
+      opacity:0.6;
+      font-size:13px;
+      padding:8px 0;
+    }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:100;
+      background:rgba(0,0,0,0.6);
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .modal-box{
+      width:100%;
+      max-width:340px;
+      background:#1a1a1a;
+      border:1px solid #2b2b2b;
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.45);
+    }
+
+    .modal-title{
+      font-size:17px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .modal-input{
+      width:100%;
+      height:48px;
+      border:none;
+      outline:none;
+      border-radius:12px;
+      background:#111;
+      border:1px solid #2b2b2b;
+      color:#fff;
+      padding:0 14px;
+      font-size:14px;
+      margin-bottom:12px;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:10px;
+    }
+
+    .modal-btn{
+      flex:1;
+      height:44px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .modal-cancel{
+      background:#2a2a2a;
+      color:#fff;
+      border:1px solid #3a3a3a;
+    }
+
+    .modal-save{
+      background:#ff4fa3;
+      color:#fff;
+    }
   </style>
 </head>
 <body>
+
 <div class="card">
+
   <button class="back-btn" onclick="goBack()">← Back</button>
+
   <div class="avatar" id="avatar"></div>
+
   <div class="title">Your Profile</div>
-  <div class="row"><span>Name:</span><div class="name-wrap"><strong id="name">-</strong><button type="button" class="edit-btn" onclick="openNameModal()">✏️</button></div></div>
-  <div class="row"><span>Email:</span><strong id="email">-</strong></div>
-  <div class="row"><span>Tokens:</span><strong id="tokens">0</strong></div>
+
+  <div class="row">
+    <span>Name:</span>
+    <div class="name-wrap">
+      <strong id="name">-</strong>
+      <button type="button" class="edit-btn" onclick="openNameModal()">✏️</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <span>Email:</span>
+    <strong id="email">-</strong>
+  </div>
+
+  <div class="row">
+    <span>Tokens:</span>
+    <strong id="tokens">0</strong>
+  </div>
+
   <h3 style="margin-top:20px;">Recent Chats</h3>
   <div id="recentChats"></div>
-  <button class="btn dark" onclick="window.location.href='gift.html'">🎁 Gifts</button>
-  <button class="btn dark" onclick="window.location.href='subscribe.html'">💎 Subscribe</button>
-  <button class="btn dark" onclick="window.location.href='album.html'">🖼 Album</button>
+
+  <button class="btn dark" onclick="goGift()">🎁 Gifts</button>
+  <button class="btn dark" onclick="goSubscribe()">💎 Subscribe</button>
+  <button class="btn dark" onclick="goAlbum()">🖼 Album</button>
   <button class="btn primary" onclick="logout()">Logout</button>
+
 </div>
+
 <div id="nameModal" class="modal">
   <div class="modal-box">
     <div class="modal-title">Edit your name</div>
@@ -56,18 +267,38 @@
     </div>
   </div>
 </div>
+
 <script>
-function goBack(){
-  const params = new URLSearchParams(window.location.search);
-  const from = params.get('from') || 'index.html';
-  window.location.href = from;
+function getAccessToken(){
+  return localStorage.getItem('accessToken') || '';
 }
-function getAccessToken(){ return localStorage.getItem('accessToken') || ''; }
+
 function authHeaders(extra = {}){
   const token = getAccessToken();
   return token ? { ...extra, Authorization: 'Bearer ' + token } : extra;
 }
-function clearUserState(){['userId','userEmail','userName','accessToken','refreshToken','age','ethnicity','body','bodyDetails','hair','appearanceDetails','personality','aiImage','imageUnlocked','lastProfileKey','aiName','recentChats','loginReturnTo','funnelFrom'].forEach(key => localStorage.removeItem(key));
+
+function clearUserState(){[
+    'userId',
+    'userEmail',
+    'userName',
+    'accessToken',
+    'refreshToken',
+    'age',
+    'ethnicity',
+    'body',
+    'bodyDetails',
+    'hair',
+    'appearanceDetails',
+    'personality',
+    'aiImage',
+    'imageUnlocked',
+    'lastProfileKey',
+    'aiName',
+    'recentChats',
+    'loginReturnTo',
+    'funnelFrom'
+  ].forEach(key => localStorage.removeItem(key));
 }
 
 if(!getAccessToken()){
@@ -76,44 +307,175 @@ if(!getAccessToken()){
   window.location.href = 'login.html';
 }
 
-const nameEl = document.getElementById('name'); const emailEl = document.getElementById('email'); const tokenEl = document.getElementById('tokens'); const avatarEl = document.getElementById('avatar'); const nameModal = document.getElementById('nameModal'); const nameInput = document.getElementById('nameInput');
+const nameEl = document.getElementById('name');
+const emailEl = document.getElementById('email');
+const tokenEl = document.getElementById('tokens');
+const avatarEl = document.getElementById('avatar');
+const nameModal = document.getElementById('nameModal');
+const nameInput = document.getElementById('nameInput');
+
 emailEl.innerText = localStorage.getItem('userEmail') || '-';
+
 avatarEl.style.backgroundImage = 'none';
 
 async function loadUserProfile(){
   try {
-    const res = await fetch('/api/session', { headers: authHeaders() });
+    const res = await fetch('/api/session', {
+      headers: authHeaders()
+    });
+
     const data = await res.json();
     const session = data?.data?.session;
-    if (!session) { window.location.href = 'login.html'; return; }
-    const latestName = session.profileName || 'User'; const latestEmail = session.user?.email || '-'; const latestBalance = session.balance ?? null;
-    localStorage.setItem('userName', latestName); localStorage.setItem('userEmail', latestEmail);
-    if(session.user?.id){ localStorage.setItem('userId', session.user.id); }
-    nameEl.innerText = latestName; emailEl.innerText = latestEmail;
-    if (latestBalance !== null) { tokenEl.innerText = latestBalance; } else { await loadTokensFallback(); }
-  } catch(e){ await loadTokensFallback(); }
+
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const latestName = session.profileName || 'User';
+    const latestEmail = session.user?.email || '-';
+    const latestBalance = session.balance ?? null;
+
+    localStorage.setItem('userName', latestName);
+    localStorage.setItem('userEmail', latestEmail);
+    if(session.user?.id){
+      localStorage.setItem('userId', session.user.id);
+    }
+
+    nameEl.innerText = latestName;
+    emailEl.innerText = latestEmail;
+
+    if (latestBalance !== null) {
+      tokenEl.innerText = latestBalance;
+    } else {
+      await loadTokensFallback();
+    }
+
+  } catch(e){
+    console.log('Session error, fallback...');
+    await loadTokensFallback();
+  }
 }
 
 async function loadTokensFallback(){
   try{
-    const res = await fetch('/api/wallet', { headers: authHeaders() });
-    const data = await res.json(); tokenEl.innerText = data.balance || 0;
-    if(data.userId){ localStorage.setItem('userId', data.userId); }
-  }catch(e){ tokenEl.innerText = 0; }
+    const res = await fetch('/api/wallet', {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+    tokenEl.innerText = data.balance || 0;
+
+    if(data.userId){
+      localStorage.setItem('userId', data.userId);
+    }
+
+  }catch(e){
+    tokenEl.innerText = 0;
+  }
 }
 
-function openNameModal(){ nameInput.value = localStorage.getItem('userName') || ''; nameModal.style.display = 'flex'; setTimeout(() => nameInput.focus(), 50); }
-function closeNameModal(){ nameModal.style.display = 'none'; }
+function openNameModal(){
+  nameInput.value = localStorage.getItem('userName') || '';
+  nameModal.style.display = 'flex';
+  setTimeout(() => nameInput.focus(), 50);
+}
+
+function closeNameModal(){
+  nameModal.style.display = 'none';
+}
+
 async function saveName(){
-  const newName = nameInput.value.trim(); if(!newName) return;
+  const newName = nameInput.value.trim();
+  if(!newName) return;
+
   try{
-    const res = await fetch('/api/auth', { method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify({ type: 'update-name', name: newName }) });
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: authHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        type: 'update-name',
+        name: newName
+      })
+    });
+
     const data = await res.json();
-    if(data.error){ alert(data.error); return; }
-    closeNameModal(); await loadUserProfile();
-  }catch(e){ alert('Error updating name'); }
+
+    if(data.error){
+      alert(data.error);
+      return;
+    }
+
+    closeNameModal();
+    await loadUserProfile();
+
+  }catch(e){
+    alert('Error updating name');
+  }
 }
 
 function loadRecentChats(){
-  const container = document.getElementById('recentChats'); container.innerHTML = '';
-  const chats = JSON.parse(localStorage.getItem('recentChats') || '
+  const container = document.getElementById('recentChats');
+  container.innerHTML = '';
+
+  const chats = JSON.parse(localStorage.getItem('recentChats') || '[]')
+    .slice(-5)
+    .reverse();
+
+  if(!chats.length){
+    container.innerHTML = '<div class="empty">No recent chats</div>';
+    return;
+  }
+
+  chats.forEach(chat => {
+    const div = document.createElement('div');
+    div.className = 'chat-item';
+
+    div.innerHTML = `
+      <div class="chat-avatar" style="background-image:url('${chat.image || ''}')"></div>
+      <div>
+        <div class="chat-name">${chat.name || 'AI'}</div>
+        <div class="chat-date">${chat.date || ''}</div>
+      </div>
+    `;
+
+    div.onclick = () => {
+      localStorage.setItem('aiName', chat.name || 'AI');
+      window.location.href = 'chat.html';
+    };
+
+    container.appendChild(div);
+  });
+}
+
+function logout(){
+  clearUserState();
+  window.location.href = 'index.html';
+}
+
+function goBack(){
+  const params = new URLSearchParams(window.location.search);
+  const from = params.get('from') || 'result.html';
+  window.location.href = from;
+}
+
+function goGift(){ window.location.href = 'gift.html'; }
+function goSubscribe(){ window.location.href = 'subscribe.html'; }
+function goAlbum(){ window.location.href = 'album.html'; }
+
+nameModal.addEventListener('click', (e) => {
+  if(e.target === nameModal) closeNameModal();
+});
+
+nameInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') saveName();
+});
+
+loadUserProfile();
+loadRecentChats();
+</script>
+
+</body>
+</html>
