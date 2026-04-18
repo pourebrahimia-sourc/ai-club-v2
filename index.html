@@ -265,19 +265,14 @@ let isLoggedIn = false;
 
 async function checkSession(){
   const token = localStorage.getItem('accessToken');
-
   if(!token){
     isLoggedIn = false;
     return;
   }
-
   try{
     const res = await fetch('/api/session', {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
+      headers: { Authorization: 'Bearer ' + token }
     });
-
     const data = await res.json();
     isLoggedIn = !!data?.data?.session;
   } catch(e){
@@ -286,33 +281,33 @@ async function checkSession(){
 }
 
 function start(){
-  localStorage.setItem('funnelFrom', 'index');
+  localStorage.setItem('funnelFrom', 'index.html');
   window.location.href = "age.html";
 }
 
 function goProfile(){
   if(isLoggedIn){
-    window.location.href = 'profile.html';
+    window.location.href = 'profile.html?from=index.html';
   } else {
-    localStorage.setItem('loginReturnTo', 'index.html');
+    localStorage.setItem('loginReturnTo', 'profile.html?from=index.html');
     window.location.href = 'login.html';
   }
 }
 
 function goGift(){
   if(isLoggedIn){
-    window.location.href = 'gift.html';
+    window.location.href = 'gift.html?from=index.html';
   } else {
-    localStorage.setItem('loginReturnTo', 'index.html');
+    localStorage.setItem('loginReturnTo', 'gift.html?from=index.html');
     window.location.href = 'login.html';
   }
 }
 
 function goSubscribe(){
   if(isLoggedIn){
-    window.location.href = 'subscribe.html';
+    window.location.href = 'subscribe.html?from=index.html';
   } else {
-    localStorage.setItem('loginReturnTo', 'index.html');
+    localStorage.setItem('loginReturnTo', 'subscribe.html?from=index.html');
     window.location.href = 'login.html';
   }
 }
